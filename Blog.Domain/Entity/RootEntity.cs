@@ -2,5 +2,5 @@
 
 public class RootEntity<T>
 {
-    T Id { get; }
+    public T Id { get; }
 }
