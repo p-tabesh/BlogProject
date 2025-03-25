@@ -13,6 +13,6 @@ public class Comment : RootEntity<int>
     public int UserId { get; private set; }
     public int ArticleId { get; private set; }
     public int? RelatedCommentId { get; private set; }
-    public List<Comment> ChildrenComment { get; private set; }
+    public List<Comment> ChildrenComments { get; private set; }
     public Comment RelatedComment { get; private set; }
 }

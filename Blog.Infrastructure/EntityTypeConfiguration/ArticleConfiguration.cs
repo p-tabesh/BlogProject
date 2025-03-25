@@ -42,5 +42,10 @@ class ArticleConfiguration : IEntityTypeConfiguration<Article>
         builder.HasMany(e => e.FavoritedBy)
             .WithMany()
             .UsingEntity("UserFavoriteArticle");
+
+        builder.HasMany<Comment>()
+            .WithOne()
+            .HasForeignKey(e=> e.ArticleId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
