@@ -11,7 +11,6 @@ class ArticleConfiguration : IEntityTypeConfiguration<Article>
     {
         builder.HasKey(e => e.Id);
 
-
         builder.Property(a => a.Likes)
         .HasConversion(
             v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
@@ -53,5 +52,7 @@ class ArticleConfiguration : IEntityTypeConfiguration<Article>
 
         builder.Property(e => e.Header)
             .HasMaxLength(50);
+
+        builder.HasQueryFilter(a => a.Status == Domain.Enum.Status.Published);
     }
 }
