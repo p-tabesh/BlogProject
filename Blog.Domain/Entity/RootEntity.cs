@@ -1,6 +1,6 @@
 ﻿namespace Blog.Domain.Entity;
 
-public class RootEntity<T>
+public abstract class RootEntity<T>
 {
     public T Id { get; }
 }

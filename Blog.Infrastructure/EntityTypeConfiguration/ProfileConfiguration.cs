@@ -10,9 +10,13 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
     {
         builder.HasKey(e => e.Id);
 
-        builder.HasOne(e => e.User)
-            .WithOne(e => e.Profile)
-            .HasForeignKey<Profile>(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(e=> e.Bio)
+            .HasMaxLength(500);
+        
+        builder.Property(e=>e.BirthPlace).HasMaxLength(50);
+        
+        builder.Property(e=>e.Gender).HasColumnType("tinyint");
+
+        builder.Property(e=>e.FullName).HasMaxLength(50);
     }
 }

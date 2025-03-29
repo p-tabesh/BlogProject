@@ -11,12 +11,12 @@ public class Article : RootEntity<int>
     public DateTime? PublishDate { get; private set; }
     public DateTime CreationDate { get; private set; }
     public Status Status { get; private set; }
-    public List<int> Likes { get; private set; } = new();
-    public List<int> Dislikes { get; private set; } = new();
+    public List<int>? Likes { get; private set; } = new();
+    public List<int>? Dislikes { get; private set; } = new();
     public int AuthorUserId { get; private set; }
     public int CategoryId { get; private set; }
     public string PreviewImageLink { get; private set; }
-    public List<User> FavoritedBy { get; private set; }
+    public List<User>? FavoritedBy { get; private set; }
 
     private Article() { }
 

@@ -12,7 +12,18 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 
         builder.HasMany(e => e.ChildCategories)
             .WithOne(e => e.ParentCategory)
-            .HasForeignKey(e=>e.ParentCategoryId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(e => e.ParentCategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        //builder.HasMany<Article>()
+        //    .WithOne()
+        //    .HasForeignKey(e => e.CategoryId)
+        //    .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Property(e => e.Name)
+            .HasMaxLength(50);
+
+        builder.Property(e => e.Description)
+            .HasMaxLength(250);       
     }
 }

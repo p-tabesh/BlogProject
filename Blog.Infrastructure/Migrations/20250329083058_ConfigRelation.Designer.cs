@@ -4,6 +4,7 @@ using Blog.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog.Infrastructure.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    partial class BlogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250329083058_ConfigRelation")]
+    partial class ConfigRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,14 +43,15 @@ namespace Blog.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Dislikes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Header")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Likes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PreviewImageLink")
@@ -70,12 +74,9 @@ namespace Blog.Infrastructure.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AuthorUserId");
 
                     b.HasIndex("CategoryId");
 
@@ -92,13 +93,11 @@ namespace Blog.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ParentCategoryId")
                         .HasColumnType("int");
@@ -135,8 +134,8 @@ namespace Blog.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte?>("Rate")
-                        .HasColumnType("tinyint");
+                    b.Property<int?>("Rate")
+                        .HasColumnType("int");
 
                     b.Property<int?>("RelatedCommentId")
                         .HasColumnType("int");
@@ -168,26 +167,23 @@ namespace Blog.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Bio")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("BirthDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("BirthPlace")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte?>("Gender")
-                        .HasColumnType("tinyint");
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -221,28 +217,22 @@ namespace Blog.Infrastructure.Migrations
                     b.Property<int>("FavoriteArticlesId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("FavoritedById")
                         .HasColumnType("int");
 
-                    b.HasKey("FavoriteArticlesId", "UserId");
+                    b.HasKey("FavoriteArticlesId", "FavoritedById");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("FavoritedById");
 
                     b.ToTable("UserFavoriteArticle");
                 });
 
             modelBuilder.Entity("Blog.Domain.Entity.Article", b =>
                 {
-                    b.HasOne("Blog.Domain.Entity.User", null)
-                        .WithMany()
-                        .HasForeignKey("AuthorUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Blog.Domain.Entity.Category", null)
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -261,7 +251,7 @@ namespace Blog.Infrastructure.Migrations
                     b.HasOne("Blog.Domain.Entity.Article", null)
                         .WithMany()
                         .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Blog.Domain.Entity.Comment", "RelatedComment")
                         .WithMany("ChildrenComments")
@@ -297,8 +287,7 @@ namespace Blog.Infrastructure.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)")
+                                .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Email");
 
                             b1.HasKey("UserId");
@@ -316,8 +305,7 @@ namespace Blog.Infrastructure.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasMaxLength(512)
-                                .HasColumnType("nvarchar(512)")
+                                .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Password");
 
                             b1.HasKey("UserId");
@@ -335,8 +323,7 @@ namespace Blog.Infrastructure.Migrations
 
                             b1.Property<string>("Value")
                                 .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)")
+                                .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Username");
 
                             b1.HasKey("UserId");
@@ -367,7 +354,7 @@ namespace Blog.Infrastructure.Migrations
 
                     b.HasOne("Blog.Domain.Entity.User", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("FavoritedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

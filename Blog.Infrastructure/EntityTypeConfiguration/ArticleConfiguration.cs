@@ -1,7 +1,6 @@
 ﻿using Blog.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection.Emit;
 using System.Text.Json;
 
 namespace Blog.Infrastructure.EntityTypeConfiguration;
@@ -33,19 +32,26 @@ class ArticleConfiguration : IEntityTypeConfiguration<Article>
 
         builder.HasOne<User>()
             .WithMany()
-            .HasForeignKey(e => e.AuthorUserId);
+            .HasForeignKey(e => e.AuthorUserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne<Category>()
             .WithMany()
             .HasForeignKey(e => e.CategoryId);
 
         builder.HasMany(e => e.FavoritedBy)
-            .WithMany()
+            .WithMany(e => e.FavoriteArticles)
             .UsingEntity("UserFavoriteArticle");
 
         builder.HasMany<Comment>()
             .WithOne()
             .HasForeignKey(e=> e.ArticleId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Property(e => e.Title)
+            .HasMaxLength(50);
+
+        builder.Property(e => e.Header)
+            .HasMaxLength(50);
     }
 }

@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="IRepository\NewFolder\" />
     <Folder Include="IService\" />
-    <Folder Include="IRepository\" />
     <Folder Include="Exception\" />
   </ItemGroup>
 
