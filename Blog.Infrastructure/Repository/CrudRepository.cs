@@ -1,5 +1,6 @@
 ﻿using Blog.Domain.IRepository;
 using Blog.Infrastructure.Context;
+using Blog.Infrastructure.Extention;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using System.Linq.Expressions;
@@ -10,11 +11,18 @@ public class CrudRepository<TEntity> : ICrudRepository<TEntity> where TEntity : 
 {
     private readonly BlogDbContext _dbContext;
     private readonly DbSet<TEntity> _entities;
+    public DbSet<TEntity> Entities { get; init; }
     public CrudRepository(BlogDbContext dbContext)
     {
+        Entities = dbContext.Set<TEntity>();
+        _dbContext = dbContext;       
+        _entities = dbContext.Set<TEntity>();
+    }
+    public CrudRepository(BlogDbContext dbContext, params Expression<Func<TEntity, object>>[] includes)
+    {
         _dbContext = dbContext;
-        _entities.Include(t => typeof(TEntity));
-        
+        _entities = dbContext.Set<TEntity>();
+        _entities.IncludeMultiple(includes);
     }
     public void Add(TEntity entity)
     {
@@ -23,7 +31,7 @@ public class CrudRepository<TEntity> : ICrudRepository<TEntity> where TEntity : 
 
     public IEnumerable<TEntity> GetAll()
     {
-        var entities = _dbContext.Set<TEntity>().ToList();
+        var entities = _entities.ToList();
         return entities;
     }
 
@@ -41,13 +49,5 @@ public class CrudRepository<TEntity> : ICrudRepository<TEntity> where TEntity : 
     public void Update(TEntity entity)
     {
         _dbContext.Update(entity);
-
-        Expression<Func<int, int>> expression = (a) => a + 1;
-        void salam(Expression<Func<int, int>> ex)
-        {
-            
-        }
-        salam(a=>a+2);
-        
     }
 }

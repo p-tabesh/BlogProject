@@ -1,8 +1,9 @@
 ﻿using Blog.Domain.Entity;
+using System.Dynamic;
 
 namespace Blog.Domain.IRepository;
 
-internal interface ICommentRepository : ICrudRepository<Comment>
+public interface ICommentRepository : ICrudRepository<Comment>
 {
-
+    IEnumerable<Comment> GetCommentsByArticleId(int articleId);
 }

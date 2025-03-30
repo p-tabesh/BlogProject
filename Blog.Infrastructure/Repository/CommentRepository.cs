@@ -1,12 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Blog.Domain.Entity;
+using Blog.Domain.IRepository;
+using Blog.Infrastructure.Context;
+using Blog.Infrastructure.Extention;
+using Microsoft.EntityFrameworkCore;
 
-namespace Blog.Infrastructure.Repository
+namespace Blog.Infrastructure.Repository;
+
+public class CommentRepository : CrudRepository<Comment>, ICommentRepository
 {
-    internal class CommentRepository
+    private BlogDbContext _dbContext;
+    private DbSet<Comment> _comments;
+    public CommentRepository(BlogDbContext dbContext) : base(dbContext)
     {
+        _dbContext = dbContext;
+        _comments = dbContext.Set<Comment>();
+    }
+
+    public IEnumerable<Comment> GetCommentsByArticleId(int articleId)
+    {
+        var comments = _comments.IncludeMultiple(c => c.ChildrenComments).Where(c => c.ArticleId == articleId);
+        return comments;
     }
 }

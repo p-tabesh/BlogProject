@@ -1,6 +1,7 @@
 ﻿using Blog.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace Blog.Infrastructure.EntityTypeConfiguration;
@@ -29,5 +30,7 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(e=>e.Rate).HasColumnType("tinyint");
+
+        builder.HasQueryFilter(e => !e.IsDeleted);
     }
 }

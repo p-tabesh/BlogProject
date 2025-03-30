@@ -5,12 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Infrastructure.Repository;
 
+// پرایوت تو همش نداشته باشیم و از پراپتری انتیتیز توی کلاس پدر استفاده کنیم؟ 
+// و یک اورلود از سازنده در کلاس پدر برای اینکلود کردن پراپتری های مورد نیاز فرزند؟
 public class UserRepository : CrudRepository<User>, IUserRepository
 {
     private readonly BlogDbContext _dbContext;
     private readonly DbSet<User> _users;
     public UserRepository(BlogDbContext dbContext)
-        : base(dbContext)
+        : base(dbContext, x => x.Profile)
     {
         _dbContext = dbContext;
         _users = dbContext.User;
@@ -19,6 +21,7 @@ public class UserRepository : CrudRepository<User>, IUserRepository
     public User GetByEmailAndPassword(string email, string password)
     {
         var user = _users.FirstOrDefault(u => u.Email.Value == email && u.Password.Value == password);
+        var userTest = Entities.FirstOrDefault(u => u.Email.Value == email && u.Password.Value == password);
         return user;
     }
 
