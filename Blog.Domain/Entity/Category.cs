@@ -7,4 +7,6 @@ public class Category : RootEntity<int>
     public int? ParentCategoryId { get; private set; }
     public Category? ParentCategory { get; private set; }
     public List<Category> ChildCategories { get; private set; }
+
+    private Category() { }
 }

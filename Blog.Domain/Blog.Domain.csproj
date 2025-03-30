@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Folder Include="IRepository\NewFolder\" />
-    <Folder Include="IService\" />
     <Folder Include="Exception\" />
   </ItemGroup>
 
