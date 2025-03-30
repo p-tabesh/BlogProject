@@ -9,4 +9,11 @@ public class Category : RootEntity<int>
     public List<Category> ChildCategories { get; private set; }
 
     private Category() { }
+
+    public Category(string name, string description, int? parentCategoryId)
+    {
+        Name = string.IsNullOrEmpty(name) ? throw new ArgumentException("Invalid input") : name;
+        Description = string.IsNullOrEmpty(description) ? throw new ArgumentException("Invalid input") : description;
+        ParentCategoryId = parentCategoryId;
+    }
 }

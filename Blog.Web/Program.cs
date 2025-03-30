@@ -1,4 +1,5 @@
 using Blog.Infrastructure.Extention;
+using Blog.Web.Extention;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,11 @@ builder.Services.AddSwaggerGen();
 
 // Add DbContext
 builder.Services.AddBlogDbContext(builder.Configuration);
+
+builder.Services.AddServices();
+builder.Services.AddRepositories();
+builder.Services.AddUnitOfWork();
+
 
 var app = builder.Build();
 

@@ -11,18 +11,16 @@ public class CategoryService : ICategoryService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICategoryRepository _categoryRepository;
-    private readonly IMapper _mapper;
 
-    public CategoryService(IUnitOfWork unitOfWork, ICategoryRepository categoryRepository, IMapper mapper)
+    public CategoryService(IUnitOfWork unitOfWork, ICategoryRepository categoryRepository)
     {
         _unitOfWork = unitOfWork;
         _categoryRepository = categoryRepository;
-        _mapper = mapper;
     }
 
     public void Add(AddCategoryRequest request)
     {
-        var category = _mapper.Map<Domain.Entity.Category>(request);
+        var category = new Domain.Entity.Category(request.Name, request.Description,request.ParentCategoryId);
         _categoryRepository.Add(category);
         _unitOfWork.Commit();
     }
