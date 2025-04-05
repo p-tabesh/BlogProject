@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Blog.Infrastructure.Context;
 using Blog.Application.Service.Article;
 using Blog.Application.Model.Article;
 using Blog.Web.Extention;
+using AutoMapper;
+using Blog.Application.Mapper.Article;
+using Blog.Domain.Entity;
 
 namespace Blog.Web.Controllers;
 
@@ -11,30 +13,32 @@ namespace Blog.Web.Controllers;
 public class ArticleController : BaseController
 {
     private readonly IArticleService _articleService;
-    private readonly ILogger<ArticleController> _logger;
-    private readonly BlogDbContext _dbContext;
 
-    public ArticleController(BlogDbContext dbContext, IArticleService articleService)
+    public ArticleController(IArticleService articleService)
     {
         _articleService = articleService;
-        _dbContext = dbContext;
     }
 
     [HttpGet]
-    public IActionResult GetArticles() => Ok(_articleService.GetArticles());
+    public IActionResult GetArticles()
+    {
+        //var models = ArticleMapper.MapToModel(_articleService.GetArticles());
+        return Ok(/*models*/);
+    }
 
     [HttpPost]
     public IActionResult CreateArticle(CreateArticleRequest request)
     {
         var id = _articleService.CreateArticle(request, RequestUserId);
-        return Ok(id);
+        return CreatedAtAction(nameof(CreateArticle), new { Id = id });
     }
 
     [HttpGet]
     [Route("{id}")]
     public IActionResult GetArticle([FromRoute] int id)
     {
-        return Ok(id);
+        var article = ArticleMapper.MapToModel<Domain.Entity.Article, ArticleViewModel>(_articleService.GetArticle(id));
+        return Ok(article);
     }
 
     [HttpPost]

@@ -2,7 +2,6 @@
 using Blog.Domain.Entity;
 using Blog.Domain.IRepository;
 using Blog.Domain.ValueObject;
-using Blog.Infrastructure.UnitOfWork;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

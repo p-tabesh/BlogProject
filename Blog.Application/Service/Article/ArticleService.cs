@@ -1,5 +1,4 @@
 ﻿using Blog.Application.Model.Article;
-using Blog.Domain.Entity;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
 

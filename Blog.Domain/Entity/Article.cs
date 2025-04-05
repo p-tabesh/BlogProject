@@ -8,7 +8,7 @@ public class Article : RootEntity<int>
     public string Title { get; private set; }
     public string Text { get; private set; }
     public List<string> Tags { get; private set; } = new();
-    public DateTime? PublishDate { get; private set; }
+    public DateTime PublishDate { get; private set; }
     public DateTime CreationDate { get; private set; }
     public Status Status { get; private set; }
     public List<int>? Likes { get; private set; } = new();
@@ -27,7 +27,7 @@ public class Article : RootEntity<int>
         Text = text;
         Tags = tags;
         PreviewImageLink = previewImageLink;
-        PublishDate = publishDate;
+        PublishDate = publishDate.HasValue? publishDate.Value : DateTime.UtcNow;
         AuthorUserId = authorUserId;
         CategoryId = categoryId;
         CreationDate = DateTime.UtcNow;

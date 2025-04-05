@@ -1,5 +1,6 @@
 using Blog.Infrastructure.Extention;
 using Blog.Web.Extention;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,8 @@ builder.Services.AddUnitOfWork();
 builder.Services.AddBlogAuthentication(builder.Configuration);
 
 builder.Services.AddBlogSwaggerConfiguration();
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 var app = builder.Build();
 
