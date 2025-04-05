@@ -65,18 +65,11 @@ public class Article : RootEntity<int>
         Status = Status.Rejected;
     }
 
-    public void EditText(string newText)
-    {
-        Text = newText;
-    }
-
-    public void EditTitle(string newTitle)
-    {
-        Title = newTitle;
-    }
-
-    public void EditHeader(string newHeader)
+    public void UpdateArticle(string newHeader, string newTitle, string newText, string newPreviewImageLink)
     {
         Header = newHeader;
+        Title = newTitle;
+        Text = newText;
+        PreviewImageLink = newPreviewImageLink;
     }
 }

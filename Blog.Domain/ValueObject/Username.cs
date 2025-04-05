@@ -12,12 +12,14 @@ public class Username
             throw new ArgumentException("Username invalid");
 
         Value = username;
-        
+
     }
 
     private static bool IsValidUsername(string username)
     {
-        if (string.IsNullOrEmpty(username) || username.Length < 4 || username.Length > 20)
+        if (string.IsNullOrEmpty(username) ||
+                username.Length < 4 ||
+                username.Length > 20)
             return false;
 
         return true;

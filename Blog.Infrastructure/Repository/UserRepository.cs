@@ -1,5 +1,6 @@
 ﻿using Blog.Domain.Entity;
 using Blog.Domain.IRepository;
+using Blog.Domain.ValueObject;
 using Blog.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,22 +19,27 @@ public class UserRepository : CrudRepository<User>, IUserRepository
         _users = dbContext.User;
     }
 
-    public User GetByEmailAndPassword(string email, string password)
+    public User GetByEmailAndPassword(Email email, Password password)
     {
-        var user = _users.FirstOrDefault(u => u.Email.Value == email && u.Password.Value == password);
-        var userTest = Entities.FirstOrDefault(u => u.Email.Value == email && u.Password.Value == password);
+        var user = _users.FirstOrDefault(u => 
+            u.Email.Value == email.Value && 
+            u.Password.Value == password.Value);
+
         return user;
     }
 
-    public User GetByUsername(string username)
+    public User GetByUsername(Username username)
     {
-        var user = _users.FirstOrDefault(u => u.Username.Value == username);
+        var user = _users.FirstOrDefault(u => u.Username.Value == username.Value);
         return user;
     }
 
-    public User GetByUsernameAndPassword(string username, string password)
+    public User GetByUsernameAndPassword(Username username, Password password)
     {
-        var user = _users.FirstOrDefault(u => u.Username.Value == username && u.Password.Value == password);
+        var user = _users.FirstOrDefault(u =>
+            u.Username.Value == username.Value &&
+            u.Password.Value == password.Value);
+
         return user;
     }
 

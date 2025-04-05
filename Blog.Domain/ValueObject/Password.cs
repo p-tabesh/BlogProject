@@ -1,5 +1,4 @@
-﻿using System.Runtime.Intrinsics.Arm;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace Blog.Domain.ValueObject;
@@ -10,15 +9,22 @@ public class Password
 
     private Password() { }
 
-    public Password(string password)
+    private Password(string password)
     {
-        if (!IsSecurePassword(password))
-            throw new ArgumentException("Password insecure");
-
         var hashedPassword = HashPassword(password);
         Value = hashedPassword;
-
     }
+
+    public static Password CreateForRegister(string inputPassword)
+    {
+        if (!IsSecurePassword(inputPassword))
+            throw new ArgumentException("Password insecure");
+
+        var password = new Password(inputPassword);
+        return password;
+    }
+
+    public static Password CreateForLogin(string inputPassword) => new Password(inputPassword);
 
     private static bool IsSecurePassword(string password)
     {

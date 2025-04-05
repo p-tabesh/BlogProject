@@ -1,4 +1,4 @@
-﻿using Blog.Application.RequestModel;
+﻿using Blog.Application.Model.Category;
 using Blog.Application.Service.Category;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,10 +15,15 @@ public class CategoryController : Controller
     }
 
     [HttpPost]
-    [Route("add")]
     public IActionResult AddCategory(AddCategoryRequest request)
     {
-        _categoryService.Add(request);
+        _categoryService.AddCategory(request);
+        return Ok();
+    }
+
+    [HttpGet]
+    public IActionResult GetCategories()
+    {
         return Ok();
     }
 }

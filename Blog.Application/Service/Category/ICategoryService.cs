@@ -1,9 +1,8 @@
-﻿using Blog.Application.RequestModel;
-using Blog.Domain.Entity;
+﻿using Blog.Application.Model.Category;
 
 namespace Blog.Application.Service.Category;
 
 public interface ICategoryService
 {
-    void Add(AddCategoryRequest request);
+    void AddCategory(AddCategoryRequest request);
 }

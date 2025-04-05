@@ -1,11 +1,12 @@
 ﻿using Blog.Domain.Entity;
+using Blog.Domain.ValueObject;
 
 namespace Blog.Domain.IRepository;
 
 public interface IUserRepository : ICrudRepository<User>
 {
-    User GetByUsername(string username);
-    User GetByUsernameAndPassword(string username, string password);
-    User GetByEmailAndPassword(string email, string password);
+    User GetByUsername(Username username);
+    User GetByUsernameAndPassword(Username username, Password password);
+    User GetByEmailAndPassword(Email email, Password password);
     IEnumerable<Article> GetFavoriteArticlesByUserId(int userId);
 }

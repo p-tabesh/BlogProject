@@ -18,6 +18,9 @@ builder.Services.AddServices();
 builder.Services.AddRepositories();
 builder.Services.AddUnitOfWork();
 
+builder.Services.AddBlogAuthentication(builder.Configuration);
+
+builder.Services.AddBlogSwaggerConfiguration();
 
 var app = builder.Build();
 
@@ -29,7 +32,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

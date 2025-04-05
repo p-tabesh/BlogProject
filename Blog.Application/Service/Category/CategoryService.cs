@@ -1,11 +1,8 @@
-﻿using AutoMapper;
-using Blog.Application.RequestModel;
-using Blog.Application.Service.Category;
-using Blog.Domain.Entity;
+﻿using Blog.Application.Model.Category;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
 
-namespace Blog.Application.Category.Service;
+namespace Blog.Application.Service.Category;
 
 public class CategoryService : ICategoryService
 {
@@ -18,7 +15,7 @@ public class CategoryService : ICategoryService
         _categoryRepository = categoryRepository;
     }
 
-    public void Add(AddCategoryRequest request)
+    public void AddCategory(AddCategoryRequest request)
     {
         var category = new Domain.Entity.Category(request.Name, request.Description,request.ParentCategoryId);
         _categoryRepository.Add(category);
