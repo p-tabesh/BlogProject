@@ -5,7 +5,7 @@ namespace Blog.Domain.ValueObject;
 
 public class Password
 {
-    public string Value { get; set; }
+    public string Value { get; private set; }
 
     private Password() { }
 

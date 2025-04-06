@@ -6,13 +6,18 @@ public class Username
 
     private Username() { }
 
-    public Username(string username)
+    private Username(string username)
     {
         if (!IsValidUsername(username))
             throw new ArgumentException("Username invalid");
 
         Value = username;
+    }
 
+    public static Username Create(string username)
+    {
+        var generatedUsername = new Username(username);
+        return generatedUsername;
     }
 
     private static bool IsValidUsername(string username)

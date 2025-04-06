@@ -33,9 +33,9 @@ public class UserService : IUserService
 
     public int RegisterUser(RegisterRequest request)
     {
-        var username = new Username(request.Username);
+        var username = Username.Create(request.Username);
         var password = Password.CreateForRegister(request.Password);
-        var email = new Email(request.Email);
+        var email = Email.Create(request.Email);
 
         var user = new Domain.Entity.User(username, password, email);
 

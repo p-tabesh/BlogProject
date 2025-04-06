@@ -4,16 +4,22 @@ namespace Blog.Domain.ValueObject;
 
 public class Email
 {
-    public string Value { get; set; }
+    public string Value { get; private set; }
 
     private Email() { }
 
-    public Email(string emailAddress)
+    private Email(string emailAddress)
     {
         if (!IsValidEmail(emailAddress))
             throw new Exception("Invalid email format.");
 
         Value =  emailAddress;
+    }
+
+    public static Email Create(string emailAddress)
+    {
+        var email = new Email(emailAddress);
+        return email;
     }
 
     private static bool IsValidEmail(string email)
