@@ -55,7 +55,7 @@ public class AccountService : IAccountService
 
     public Domain.Entity.User GetUser(LoginRequest request)
     {
-        var username = new Username(request.Username);
+        var username = Username.Create(request.Username);
         var password = Password.CreateForLogin(request.Password);
         var user = _userRepository.GetByUsernameAndPassword(username, password);
 
