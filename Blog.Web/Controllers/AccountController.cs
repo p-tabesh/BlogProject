@@ -20,7 +20,7 @@ public class AccountController : BaseController
     [AllowAnonymous]
     [HttpPost]
     [Route("login")]
-    public IActionResult Login([FromBody] LoginRequest request)
+    public IActionResult Login(LoginRequest request)
     {
         var user = _accountService.GetUser(request);
         var tokenString = _accountService.GenerateToken(user.Id);

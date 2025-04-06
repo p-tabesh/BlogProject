@@ -34,6 +34,8 @@ public class Article : RootEntity<int>
         Status = Status.Draft;
     }
 
+
+    
     public void Like(int userId)
     {
         if (Likes.Any(x => x == userId))

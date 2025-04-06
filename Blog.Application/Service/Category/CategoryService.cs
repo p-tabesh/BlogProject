@@ -15,10 +15,12 @@ public class CategoryService : ICategoryService
         _categoryRepository = categoryRepository;
     }
 
-    public void AddCategory(AddCategoryRequest request)
+    public int CreateCategory(AddCategoryRequest request)
     {
         var category = new Domain.Entity.Category(request.Name, request.Description,request.ParentCategoryId);
         _categoryRepository.Add(category);
         _unitOfWork.Commit();
+
+        return category.Id;
     }
 }

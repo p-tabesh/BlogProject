@@ -54,7 +54,7 @@ public class AccountService : IAccountService
         return tokenString;
     }
 
-    public User GetUser(LoginRequest request)
+    public Domain.Entity.User GetUser(LoginRequest request)
     {
         var username = new Username(request.Username);
         var password = Password.CreateForLogin(request.Password);

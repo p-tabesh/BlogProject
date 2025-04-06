@@ -4,5 +4,5 @@ namespace Blog.Application.Service.Category;
 
 public interface ICategoryService
 {
-    void AddCategory(AddCategoryRequest request);
+    int CreateCategory(AddCategoryRequest request);
 }

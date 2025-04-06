@@ -2,16 +2,41 @@
 
 namespace Blog.Domain.Entity;
 
-public class Profile: RootEntity<int>
+public class Profile : RootEntity<int>
 {
     public string FullName { get; private set; }
     public Gender? Gender { get; private set; }
     public string? BirthPlace { get; private set; }
     public DateTime? BirthDate { get; private set; }
     public string? Bio { get; private set; }
+    public string ProfileImageLink { get; private set; }
     public DateTime CreationDate { get; private set; }
     public User User { get; private set; }
     public int UserId { get; private set; }
+
+    private Profile() { }
+    public Profile(string fullName, Gender gender, string birthPlace, string bio, string profileImageLink, int userId)
+    {
+        FullName = string.IsNullOrEmpty(fullName) ? throw new ArgumentNullException() : fullName;
+        Gender = gender;
+        BirthPlace = string.IsNullOrEmpty(birthPlace) ? throw new ArgumentNullException() : birthPlace;
+        Bio = bio;
+        ProfileImageLink = profileImageLink;
+        UserId = userId;
+    }
+
+    public void EditProfile(string fullName, Gender gender, string birthPlace, string bio)
+    { 
+        FullName = fullName;
+        Gender = gender;
+        BirthPlace = birthPlace;
+        Bio = bio;
+    }
+
+    public void ChangeProfileImage(string newProfileImageLink)
+    {
+        ProfileImageLink = newProfileImageLink;
+    }
 }
 
 

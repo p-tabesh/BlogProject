@@ -9,7 +9,7 @@ public class User : RootEntity<int>
     public Email Email { get; private set; }
     public DateTime CreationDate { get; private set; }
     public List<Article>? FavoriteArticles { get; private set; }
-    public Profile Profile { get; private set; }
+    public Profile? Profile { get; private set; }
     private User() { }
     public User(Username username, Password password, Email email)
     {

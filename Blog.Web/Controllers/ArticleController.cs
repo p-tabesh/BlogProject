@@ -2,14 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using Blog.Application.Service.Article;
 using Blog.Application.Model.Article;
 using Blog.Web.Extention;
-using AutoMapper;
 using Blog.Application.Mapper.Article;
-using Blog.Domain.Entity;
 
 namespace Blog.Web.Controllers;
 
 [ApiController]
-[Route("api/Articles")]
+[Route("api/articles")]
 public class ArticleController : BaseController
 {
     private readonly IArticleService _articleService;
@@ -22,8 +20,8 @@ public class ArticleController : BaseController
     [HttpGet]
     public IActionResult GetArticles()
     {
-        //var models = ArticleMapper.MapToModel(_articleService.GetArticles());
-        return Ok(/*models*/);
+        var models = ArticleMapper.MapToModel(_articleService.GetArticles());
+        return Ok(models);
     }
 
     [HttpPost]
@@ -35,23 +33,25 @@ public class ArticleController : BaseController
 
     [HttpGet]
     [Route("{id}")]
-    public IActionResult GetArticle([FromRoute] int id)
+    public IActionResult GetArticle(int id)
     {
-        var article = ArticleMapper.MapToModel<Domain.Entity.Article, ArticleViewModel>(_articleService.GetArticle(id));
+        var article = ArticleMapper.MapToModel(_articleService.GetArticle(id));
         return Ok(article);
     }
 
     [HttpPost]
-    [Route("{id}/Like")]
-    public IActionResult LikeArticle([FromRoute] int id)
+    [Route("{id}/like")]
+    public IActionResult LikeArticle(int id)
     {
-        return Ok(id);
+        _articleService.LikeArticle(id, RequestUserId);
+        return Ok();
     }
 
     [HttpPost]
-    [Route("{id}/Dislike")]
-    public IActionResult DislikeArticle([FromRoute] int id)
+    [Route("{id}/dislike")]
+    public IActionResult DislikeArticle(int id)
     {
-        return Ok(id);
+        _articleService.DislikeArticle(id, RequestUserId);
+        return Ok();
     }
 }

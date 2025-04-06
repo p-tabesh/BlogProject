@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Blog.Application.Model.Comment;
 
-namespace Blog.Application.Service.Comment
+namespace Blog.Application.Service.Comment;
+
+public interface ICommentService
 {
-    internal interface ICommentService
-    {
-    }
+    int AddComment(AddCommentRequest request, int requestUserId);
 }
