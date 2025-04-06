@@ -10,7 +10,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
     private readonly BlogDbContext _dbContext;
     private readonly DbSet<Article> _articles;
     public ArticleRepository(BlogDbContext dbContext)
-        : base(dbContext)
+        : base(dbContext, e => e.FavoritedBy)
     {
         _dbContext = dbContext;
         _articles = dbContext.Article;
@@ -18,7 +18,13 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
 
     public IEnumerable<Article> GetAllForAdmin()
     {
-        var articles = _articles.IgnoreQueryFilters().ToList();
+        var articles = _articles.ToList();
+        return articles;
+    }
+
+    public IEnumerable<Article> GetAllForWeb()
+    {
+        var articles = _articles.Where(a => a.Status == Domain.Enum.Status.Published && a.PublishDate >= DateTime.Now).ToList();
         return articles;
     }
 

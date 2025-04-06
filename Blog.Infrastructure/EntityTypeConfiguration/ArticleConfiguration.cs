@@ -52,7 +52,5 @@ class ArticleConfiguration : IEntityTypeConfiguration<Article>
 
         builder.Property(e => e.Header)
             .HasMaxLength(50);
-
-        builder.HasQueryFilter(a => a.Status == Domain.Enum.Status.Published);
     }
 }
