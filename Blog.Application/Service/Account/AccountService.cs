@@ -1,5 +1,4 @@
 ﻿using Blog.Application.Model.Account;
-using Blog.Domain.Entity;
 using Blog.Domain.IRepository;
 using Blog.Domain.ValueObject;
 using Microsoft.Extensions.Configuration;
@@ -23,7 +22,7 @@ public class AccountService : IAccountService
 
     public bool IsTokenBlackListed(string sid)
     {
-        return true;
+        return false;
     }
 
     public string GenerateToken(int userId)
