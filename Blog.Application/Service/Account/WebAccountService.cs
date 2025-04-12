@@ -9,12 +9,12 @@ using System.Text;
 
 namespace Blog.Application.Service.Account;
 
-public class AccountService : IAccountService
+public class WebAccountService : IAccountService
 {
     private readonly IConfiguration _configuration;
     private readonly IUserRepository _userRepository;
 
-    public AccountService(IConfiguration configuration, IUserRepository userRepository)
+    public WebAccountService(IConfiguration configuration, IUserRepository userRepository)
     {
         _configuration = configuration;
         _userRepository = userRepository;
@@ -29,7 +29,6 @@ public class AccountService : IAccountService
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         securityKey.KeyId = Guid.NewGuid().ToString();
-        //var role = isAdmin == false ? null : "admin";
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
         var claims = new List<Claim>()
@@ -37,11 +36,6 @@ public class AccountService : IAccountService
             new Claim(ClaimTypes.NameIdentifier, Convert.ToString(userId)),
             new Claim(ClaimTypes.Sid,Guid.NewGuid().ToString())
         };
-
-        //if (isAdmin)
-        //{
-        //    claims.Add(new Claim(ClaimTypes.Role, role));
-        //}
 
         var token = new JwtSecurityToken(issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],

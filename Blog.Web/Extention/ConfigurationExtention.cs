@@ -22,7 +22,7 @@ public static partial class ConfigurationExtention
     {
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IArticleService, ArticleService>();
-        services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IAccountService, WebAccountService>();
     }
 
     public static void AddBlogSwaggerConfiguration(this IServiceCollection services)
