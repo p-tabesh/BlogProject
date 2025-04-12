@@ -10,7 +10,7 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
     private readonly BlogDbContext _dbContext;
     private readonly DbSet<Article> _articles;
     public ArticleRepository(BlogDbContext dbContext)
-        : base(dbContext, e => e.FavoritedBy)
+        : base(dbContext)
     {
         _dbContext = dbContext;
         _articles = dbContext.Article;

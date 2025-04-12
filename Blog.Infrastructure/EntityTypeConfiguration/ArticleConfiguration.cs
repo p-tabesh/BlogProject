@@ -38,10 +38,6 @@ class ArticleConfiguration : IEntityTypeConfiguration<Article>
             .WithMany()
             .HasForeignKey(e => e.CategoryId);
 
-        builder.HasMany(e => e.FavoritedBy)
-            .WithMany(e => e.FavoriteArticles)
-            .UsingEntity("UserFavoriteArticle");
-
         builder.HasMany<Comment>()
             .WithOne()
             .HasForeignKey(e=> e.ArticleId)

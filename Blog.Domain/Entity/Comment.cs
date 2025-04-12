@@ -5,7 +5,6 @@ namespace Blog.Domain.Entity;
 public class Comment : RootEntity<int>
 {
     public string Text { get; private set; }
-    //public Rate? Rate { get; private set; }
     public List<int> Likes { get; private set; } = new();
     public List<int> Dislikes { get; private set; } = new();
     public bool IsDeleted { get; private set; } = false;

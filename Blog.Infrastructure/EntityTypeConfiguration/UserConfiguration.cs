@@ -1,6 +1,7 @@
 ﻿using Blog.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Text.Json;
 
 namespace Blog.Infrastructure.EntityTypeConfiguration;
 
@@ -25,22 +26,19 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasColumnName("Email")
             .HasMaxLength(50);
 
-        builder.HasMany(e => e.FavoriteArticles)
-           .WithMany(e => e.FavoritedBy)
-           .UsingEntity("UserFavoriteArticle");
-
-        builder.HasMany<Article>()
-            .WithMany()
-            .UsingEntity("UserFavoriteArticle");
-
+        builder.Property(a => a.FavoriteArticleIds)
+        .HasConversion(
+            v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+            v => JsonSerializer.Deserialize<List<int>>(v, (JsonSerializerOptions?)null) ?? new List<int>()
+        );
 
         builder.HasMany<Comment>()
             .WithOne()
             .HasForeignKey(e => e.UserId);
 
-        builder.HasOne<Profile>(e => e.Profile)
-            .WithOne(e=> e.User)
-            .HasForeignKey<Profile>(e => e.UserId)
-            .OnDelete(DeleteBehavior.Cascade);       
+        builder.HasOne(e => e.Profile)
+            .WithOne()
+            .HasForeignKey<Profile>("Id")
+            .OnDelete(DeleteBehavior.Cascade);   
     }
 }

@@ -16,7 +16,6 @@ public class Article : RootEntity<int>
     public int AuthorUserId { get; private set; }
     public int CategoryId { get; private set; }
     public string PreviewImageLink { get; private set; }
-    public List<User>? FavoritedBy { get; private set; }
 
     private Article() { }
 

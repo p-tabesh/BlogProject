@@ -11,8 +11,6 @@ public class Profile : RootEntity<int>
     public string? Bio { get; private set; }
     public string ProfileImageLink { get; private set; }
     public DateTime CreationDate { get; private set; }
-    public User User { get; private set; }
-    public int UserId { get; private set; }
 
     private Profile() { }
     public Profile(string fullName, Gender gender, string birthPlace, string bio, string profileImageLink, int userId)
@@ -20,9 +18,8 @@ public class Profile : RootEntity<int>
         FullName = string.IsNullOrEmpty(fullName) ? throw new ArgumentNullException() : fullName;
         Gender = gender;
         BirthPlace = string.IsNullOrEmpty(birthPlace) ? throw new ArgumentNullException() : birthPlace;
-        Bio = bio;
+        Bio = string.IsNullOrEmpty(bio) ? throw new ArgumentNullException() : bio;
         ProfileImageLink = profileImageLink;
-        UserId = userId;
     }
 
     public void EditProfile(string fullName, Gender gender, string birthPlace, string bio)

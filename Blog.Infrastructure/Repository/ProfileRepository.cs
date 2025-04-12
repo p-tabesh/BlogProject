@@ -10,7 +10,7 @@ public class ProfileRepository : CrudRepository<Profile>, IProfileRepository
     private readonly BlogDbContext _dbContext;
     private readonly DbSet<Profile> _profiles;
     public ProfileRepository(BlogDbContext dbContext)
-        : base(dbContext, x => x.User)
+        : base(dbContext)
     {
         _dbContext = dbContext;
         _profiles = dbContext.Profile;
@@ -18,7 +18,7 @@ public class ProfileRepository : CrudRepository<Profile>, IProfileRepository
 
     public Profile GetByUserId(int userId)
     {
-        var profile = _profiles.FirstOrDefault(p => p.UserId == userId);
+        var profile = _profiles.FirstOrDefault(p => p.Id == userId);
         return profile;
     }
 }

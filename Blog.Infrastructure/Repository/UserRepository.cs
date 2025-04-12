@@ -42,11 +42,4 @@ public class UserRepository : CrudRepository<User>, IUserRepository
 
         return user;
     }
-
-    public IEnumerable<Article> GetFavoriteArticlesByUserId(int userId)
-    {
-        var user = _users.Find(userId);
-        var favoriteArticles = user?.FavoriteArticles?.ToList();
-        return favoriteArticles;
-    }
 }

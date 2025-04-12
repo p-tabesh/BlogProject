@@ -30,6 +30,7 @@ public class ProfileController : BaseController
     }
 
     [HttpPut]
+    [Route("editProfile")]
     public IActionResult EditProfile(EditProfileRequest request)
     {
         _profileService.EditProfile(request, RequestUserId);
@@ -37,6 +38,7 @@ public class ProfileController : BaseController
     }
 
     [HttpPut]
+    [Route("editimage")]
     public IActionResult ChangeProfile(ChangeProfileImageLinkRequest request)
     {
         _profileService.ChangeProfileImageLink(request, RequestUserId);

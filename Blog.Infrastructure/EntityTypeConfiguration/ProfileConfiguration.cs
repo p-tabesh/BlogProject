@@ -8,7 +8,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
 {
     public void Configure(EntityTypeBuilder<Profile> builder)
     {
-        builder.HasKey(e => e.Id);
+        builder.Property<int>("Id").ValueGeneratedNever();
 
         builder.Property(e=> e.Bio)
             .HasMaxLength(500);

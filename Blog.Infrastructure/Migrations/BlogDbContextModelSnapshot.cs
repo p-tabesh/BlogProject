@@ -118,7 +118,7 @@ namespace Blog.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ArticleId")
+                    b.Property<int>("ArticleId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreationDate")
@@ -134,9 +134,6 @@ namespace Blog.Infrastructure.Migrations
                     b.Property<string>("Likes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte?>("Rate")
-                        .HasColumnType("tinyint");
 
                     b.Property<int?>("RelatedCommentId")
                         .HasColumnType("int");
@@ -162,10 +159,7 @@ namespace Blog.Infrastructure.Migrations
             modelBuilder.Entity("Blog.Domain.Entity.Profile", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Bio")
                         .HasMaxLength(500)
@@ -189,13 +183,11 @@ namespace Blog.Infrastructure.Migrations
                     b.Property<byte?>("Gender")
                         .HasColumnType("tinyint");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProfileImageLink")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Profile");
                 });
@@ -211,24 +203,13 @@ namespace Blog.Infrastructure.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FavoriteArticleIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("User");
-                });
-
-            modelBuilder.Entity("UserFavoriteArticle", b =>
-                {
-                    b.Property<int>("FavoriteArticlesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("FavoriteArticlesId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserFavoriteArticle");
                 });
 
             modelBuilder.Entity("Blog.Domain.Entity.Article", b =>
@@ -261,7 +242,8 @@ namespace Blog.Infrastructure.Migrations
                     b.HasOne("Blog.Domain.Entity.Article", null)
                         .WithMany()
                         .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Blog.Domain.Entity.Comment", "RelatedComment")
                         .WithMany("ChildrenComments")
@@ -279,13 +261,11 @@ namespace Blog.Infrastructure.Migrations
 
             modelBuilder.Entity("Blog.Domain.Entity.Profile", b =>
                 {
-                    b.HasOne("Blog.Domain.Entity.User", "User")
+                    b.HasOne("Blog.Domain.Entity.User", null)
                         .WithOne("Profile")
-                        .HasForeignKey("Blog.Domain.Entity.Profile", "UserId")
+                        .HasForeignKey("Blog.Domain.Entity.Profile", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Blog.Domain.Entity.User", b =>
@@ -357,21 +337,6 @@ namespace Blog.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("UserFavoriteArticle", b =>
-                {
-                    b.HasOne("Blog.Domain.Entity.Article", null)
-                        .WithMany()
-                        .HasForeignKey("FavoriteArticlesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Blog.Domain.Entity.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Blog.Domain.Entity.Category", b =>
                 {
                     b.Navigation("ChildCategories");
@@ -384,8 +349,7 @@ namespace Blog.Infrastructure.Migrations
 
             modelBuilder.Entity("Blog.Domain.Entity.User", b =>
                 {
-                    b.Navigation("Profile")
-                        .IsRequired();
+                    b.Navigation("Profile");
                 });
 #pragma warning restore 612, 618
         }

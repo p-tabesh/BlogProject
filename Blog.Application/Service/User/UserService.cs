@@ -16,11 +16,6 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
-    public void AddFavoriteArticle(int requestUserId,int articleId)
-    {
-        var user = _userRepository.GetById(requestUserId);
-    }
-
     public void ChangePassword(ChangePasswordRequest request)
     {
         
@@ -43,10 +38,5 @@ public class UserService : IUserService
         _unitOfWork.Commit();
 
         return user.Id;
-    }
-
-    public void RemoveFavoriteArtice(int requestUserId,int articleId)
-    {
-        
-    }
+    }    
 }

@@ -1,4 +1,5 @@
-﻿using Blog.Domain.ValueObject;
+﻿using Blog.Domain.Enum;
+using Blog.Domain.ValueObject;
 
 namespace Blog.Domain.Entity;
 
@@ -8,9 +9,11 @@ public class User : RootEntity<int>
     public Password Password { get; private set; }
     public Email Email { get; private set; }
     public DateTime CreationDate { get; private set; }
-    public List<Article>? FavoriteArticles { get; private set; }
+    public List<int> FavoriteArticleIds { get; private set; } = new();
     public Profile? Profile { get; private set; }
+
     private User() { }
+
     public User(Username username, Password password, Email email)
     {
         Username = username;
@@ -19,18 +22,23 @@ public class User : RootEntity<int>
         CreationDate = DateTime.UtcNow;
     }
 
-    public void AddToFavorite(Article article)
+    public void CreateProfile(string fullName, Gender gender, string birthPlace, string bio, string profileImageLink)
     {
-        if (FavoriteArticles.Any(a => a.Id == article.Id))
-            throw new InvalidOperationException("This article already in favorites");
-        else
-            FavoriteArticles.Add(article);
+        Profile = new Profile(fullName,gender,birthPlace,bio,profileImageLink,Id);
     }
 
-    public void RemoveFromFavorite(Article article)
+    public void AddToFavorite(int articleId)
     {
-        if (FavoriteArticles.Any(a => a.Id == article.Id))
-            FavoriteArticles.Remove(article);
+        if (FavoriteArticleIds.Any(a => a == articleId))
+            throw new InvalidOperationException("This article already in favorites");
+        else
+            FavoriteArticleIds.Add(articleId);
+    }
+
+    public void RemoveFromFavorite(int articleId)
+    {
+        if (FavoriteArticleIds.Any(a => a == articleId))
+            FavoriteArticleIds.Remove(articleId);
         else
             throw new InvalidOperationException("This article is not in favorites");
     }

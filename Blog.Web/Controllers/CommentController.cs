@@ -15,6 +15,7 @@ public class CommentController : BaseController
         _commentSerivce = commentService;
     }
 
+    [HttpPost]
     public IActionResult AddComment(AddCommentRequest request)
     {
         var id = _commentSerivce.AddComment(request,RequestUserId);

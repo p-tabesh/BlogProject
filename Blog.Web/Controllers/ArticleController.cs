@@ -11,10 +11,20 @@ namespace Blog.Web.Controllers;
 public class ArticleController : BaseController
 {
     private readonly IArticleService _articleService;
+    private ILogger<ArticleController> _logger;
 
-    public ArticleController(IArticleService articleService)
+    public ArticleController(IArticleService articleService, ILogger<ArticleController> logger)
     {
         _articleService = articleService;
+        _logger = logger;   
+    }
+
+    [HttpGet]
+    [Route("test")]
+    public IActionResult TestLog(string message)
+    {
+        _logger.LogInformation(message);    
+        return Ok(message);
     }
 
     [HttpGet]
