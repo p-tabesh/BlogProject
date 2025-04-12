@@ -16,10 +16,20 @@ public class CommentService : ICommentService
 
     public int AddComment(AddCommentRequest request, int requestUserId)
     {
-        var comment = new Domain.Entity.Comment(request.Text,request.ArticleId,request.RelatedCommentId,requestUserId);
+        var comment = new Domain.Entity.Comment(request.Text, request.RelatedCommentId, request.ArticleId, requestUserId);
         _commentRepository.Add(comment);
         _unitOfWork.Commit();
 
         return comment.Id;
+    }
+
+    public void ReplyComment(ReplyCommentRequest request, int requestUserId)
+    {
+        
+        var comment = _commentRepository.GetById(request.ParentCommentId);
+        comment.ReplyComment(request.Text, requestUserId);
+
+        _commentRepository.Update(comment);
+        _unitOfWork.Commit();
     }
 }

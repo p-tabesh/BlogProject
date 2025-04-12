@@ -17,7 +17,7 @@ public class Comment : RootEntity<int>
 
     private Comment() { }
 
-    public Comment(string text, int articleId, int? relatedCommentId, int userId)
+    public Comment(string text, int? relatedCommentId, int articleId, int userId)
     {
         Text = string.IsNullOrEmpty(text) ? text : throw new ArgumentException("Invalid Text");
         ArticleId = articleId;
@@ -26,6 +26,15 @@ public class Comment : RootEntity<int>
         CreationDate = DateTime.UtcNow;
     }
 
+    public void ReplyComment(string text, int userId)
+    {
+        var comment = new Comment(text, this.Id, this.ArticleId, userId);
+
+        if (ChildrenComments == null)
+            ChildrenComments = new List<Comment>();
+
+        ChildrenComments.Add(comment);
+    }
 
     #region Likes
     public void Like(int userId)

@@ -21,4 +21,12 @@ public class CommentController : BaseController
         var id = _commentSerivce.AddComment(request,RequestUserId);
         return CreatedAtAction(nameof(AddComment), new { Id = id });
     }
+
+    [HttpPost]
+    [Route("reply")]
+    public IActionResult ReplyComment(ReplyCommentRequest request)
+    {
+        _commentSerivce.ReplyComment(request, RequestUserId);
+        return Ok();
+    }
 }
