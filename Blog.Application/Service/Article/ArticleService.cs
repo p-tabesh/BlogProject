@@ -1,6 +1,7 @@
 ﻿using Blog.Application.Model.Article;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
+using Blog.Domain.Specifications;
 
 namespace Blog.Application.Service.Article;
 
@@ -15,7 +16,7 @@ public class ArticleService : IArticleService
         _articleRepository = articleRepository;
     }
 
-    public IEnumerable<Domain.Entity.Article> GetArticles() => _articleRepository.GetAll();
+    public IEnumerable<Domain.Entity.Article> GetArticles() => _articleRepository.GetWithSpecifications(new PublishedArticleSpecification());
 
     public Domain.Entity.Article GetArticle(int id) => _articleRepository.GetById(id);
 

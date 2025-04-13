@@ -36,8 +36,8 @@ public class test
     public void salam()
     {
         var article = new Article();
-        var spec = new ArticleSpecification(article);
-        spec.Expression =
+        var spec = new ArticleSpecification(article, a=> a.Id == 123);
+        
     }
 
 }

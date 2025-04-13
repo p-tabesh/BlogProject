@@ -1,6 +1,7 @@
 ﻿using Blog.Domain.Entity;
 using Blog.Domain.IRepository;
 using Blog.Infrastructure.Context;
+using Core.Repository.Model.Specifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Infrastructure.Repository;
@@ -22,12 +23,6 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         return articles;
     }
 
-    public IEnumerable<Article> GetAllForWeb()
-    {
-        var articles = _articles.Where(a => a.Status == Domain.Enum.Status.Published && a.PublishDate >= DateTime.Now).ToList();
-        return articles;
-    }
-
     public IEnumerable<Article> GetArticlesByCategoryId(int categoryId)
     {
         var articles = _articles.Where(a => a.CategoryId == categoryId).ToList();
@@ -40,15 +35,9 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         return articles;
     }
 
-    public IEnumerable<Article> GetArticlesWithKeyWord(string keyword)
+    public IEnumerable<Article> GetWithSpecifications(Specification<Article> spec)
     {
-        var articles = _articles.Where(a => a.Title == keyword || a.Header == keyword).ToList();
-        return articles;
-    }
-
-    public IEnumerable<Article> GetArticlesWithTag(string tag)
-    {
-        var articles = _articles.Where(a => a.Tags.Contains(tag)).ToList();
+        var articles = _articles.Where(spec.Expression);
         return articles;
     }
 }
