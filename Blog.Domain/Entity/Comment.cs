@@ -8,6 +8,7 @@ public class Comment : RootEntity<int>
     public List<int> Likes { get; private set; } = new();
     public List<int> Dislikes { get; private set; } = new();
     public bool IsDeleted { get; private set; } = false;
+    public bool IsShow { get; private set; } = false;
     public DateTime CreationDate { get; private set; }
     public int UserId { get; private set; }
     public int ArticleId { get; private set; }
@@ -35,6 +36,23 @@ public class Comment : RootEntity<int>
 
         ChildrenComments.Add(comment);
     }
+
+    public void Show()
+    {
+        if (IsShow == false)
+            return;
+
+        this.IsShow = true;
+    }
+
+    public void DisableShow()
+    {
+        if (IsShow == false)
+            return;
+
+        this.IsShow = false;
+    }
+    
 
     #region Likes
     public void Like(int userId)

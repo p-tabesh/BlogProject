@@ -1,4 +1,6 @@
-﻿using Blog.Application.Model.Article;
+﻿using AutoMapper;
+using Blog.Application.Model.Article;
+using Blog.Domain.Entity;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
 using Blog.Domain.Specifications;
@@ -9,20 +11,29 @@ public class ArticleService : IArticleService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IArticleRepository _articleRepository;
+    private readonly IMapper _mapper;
 
-    public ArticleService(IUnitOfWork unitOfWork, IArticleRepository articleRepository)
+    public ArticleService(IUnitOfWork unitOfWork, IArticleRepository articleRepository, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _articleRepository = articleRepository;
+        _mapper = mapper;
     }
 
-    public IEnumerable<Domain.Entity.Article> GetArticles() => _articleRepository.GetWithSpecifications(new PublishedArticleSpecification());
+    public IEnumerable<ArticleViewModel> GetArticles()
+    {
+        var articles = _articleRepository.GetWithSpecifications(new PublishedArticleSpecification());
+        var models = _mapper.Map<List<ArticleViewModel>>(articles);
+        return models;
+    }
 
-    public Domain.Entity.Article GetArticle(int id) => _articleRepository.GetById(id);
+    public ArticleViewModel GetArticle(int id)
+    {
+        var model = _mapper.Map<ArticleViewModel>(_articleRepository.GetById(id));
+        return model;
+    }
 
     public IEnumerable<Domain.Entity.Article> GetArticlesByCategoryId(int categoryId) => _articleRepository.GetArticlesByCategoryId(categoryId);
-
-    public IEnumerable<Domain.Entity.Article> GetArticlesByTag(string tag) => _articleRepository.GetArticlesWithTag(tag);
 
     public IEnumerable<Domain.Entity.Article> GetArticlesByUserId(int userId) => _articleRepository.GetArticlesByUserId(userId);
 
@@ -38,7 +49,7 @@ public class ArticleService : IArticleService
             request.PublishDate,
             requestUserId,
             request.categoryId);
-
+        
         _articleRepository.Add(article);
         _unitOfWork.Commit();
 

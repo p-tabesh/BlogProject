@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Blog.Application.Service.Article;
 using Blog.Application.Model.Article;
 using Blog.Web.Extention;
-using Blog.Application.Mapper.Article;
+using AutoMapper;
 
 namespace Blog.Web.Controllers;
 
@@ -12,11 +12,13 @@ public class ArticleController : BaseController
 {
     private readonly IArticleService _articleService;
     private ILogger<ArticleController> _logger;
+    private IMapper _mapper;
 
-    public ArticleController(IArticleService articleService, ILogger<ArticleController> logger)
+    public ArticleController(IArticleService articleService,IMapper mapper, ILogger<ArticleController> logger)
     {
         _articleService = articleService;
         _logger = logger;   
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -30,8 +32,8 @@ public class ArticleController : BaseController
     [HttpGet]
     public IActionResult GetArticles()
     {
-        var models = ArticleMapper.MapToModel(_articleService.GetArticles());
-        return Ok(models);
+        var articles = _articleService.GetArticles();
+        return Ok(articles);
     }
 
     [HttpPost]
@@ -45,7 +47,7 @@ public class ArticleController : BaseController
     [Route("{id}")]
     public IActionResult GetArticle(int id)
     {
-        var article = ArticleMapper.MapToModel(_articleService.GetArticle(id));
+        var article = _articleService.GetArticle(id);
         return Ok(article);
     }
 

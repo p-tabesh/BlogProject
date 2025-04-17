@@ -14,7 +14,7 @@ public class UnitOfWork(BlogDbContext dbContext) : IUnitOfWork
 
     public void Rollback()
     {
-        throw new NotImplementedException();
+        _dbContext.ChangeTracker.Clear();
     }
 
     public void Dispose()

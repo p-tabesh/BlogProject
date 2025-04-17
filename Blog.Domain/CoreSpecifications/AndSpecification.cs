@@ -17,27 +17,3 @@ public class AndSpecification<T> : Specification<T>
 
     public override Expression<Func<T, bool>> Expression => _left.Expression.And(_right.Expression);
 }
-
-public class ArticleSpecification : Specification<Article>
-{
-    Article _article;
-    Expression<Func<Article, bool>> _exp;
-    public ArticleSpecification(Article article, Expression<Func<Article, bool>> expression)
-    {
-        _article = article;
-        _exp = expression;
-    }
-
-    public override Expression<Func<Article, bool>> Expression => _exp;
-}
-
-public class test
-{
-    public void salam()
-    {
-        var article = new Article();
-        var spec = new ArticleSpecification(article, a=> a.Id == 123);
-        
-    }
-
-}
