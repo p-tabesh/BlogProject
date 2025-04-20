@@ -25,7 +25,7 @@ public class ArticleController : BaseController
     [Route("test")]
     public IActionResult TestLog(string message)
     {
-        _logger.LogInformation(message);    
+        _logger.LogError(message);    
         return Ok(message);
     }
 

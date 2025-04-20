@@ -33,11 +33,7 @@ public class ArticleService : IArticleService
         return model;
     }
 
-    public IEnumerable<Domain.Entity.Article> GetArticlesByCategoryId(int categoryId) => _articleRepository.GetArticlesByCategoryId(categoryId);
-
-    public IEnumerable<Domain.Entity.Article> GetArticlesByUserId(int userId) => _articleRepository.GetArticlesByUserId(userId);
-
-    public IEnumerable<Domain.Entity.Article> GetArticlesForAdmin() => _articleRepository.GetAllForAdmin();
+    public IEnumerable<Domain.Entity.Article> GetArticlesForAdmin() => _articleRepository.GetAll();
 
     public int CreateArticle(CreateArticleRequest request, int requestUserId)
     {

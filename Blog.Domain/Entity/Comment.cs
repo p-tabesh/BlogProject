@@ -52,6 +52,14 @@ public class Comment : RootEntity<int>
 
         this.IsShow = false;
     }
+
+    public void RejectComment()
+    {
+        if (IsShow == false)
+            return;
+
+        this.IsShow = false;
+    }
     
 
     #region Likes

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Blog.Admin.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("articles")]
 public class ArticleController : ControllerBase
 {
     private readonly ILogger<ArticleController> _logger;
@@ -22,4 +22,21 @@ public class ArticleController : ControllerBase
         var articles = _adminArticleService.GetArticles();
         return Ok(articles);
     }
+
+    [HttpPut]
+    [Route("{id}/reject")]
+    public IActionResult RejectArticle(int id)
+    {
+        _adminArticleService.Reject(id);
+        return Ok();
+    }
+
+    [HttpPut]
+    [Route("{id}/accept")]
+    public IActionResult AcceptArticle(int id)
+    {
+        _adminArticleService.Accept(id);
+        return Ok();
+    }
+    
 }

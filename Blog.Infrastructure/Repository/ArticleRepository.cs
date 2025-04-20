@@ -17,12 +17,6 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         _articles = dbContext.Article;
     }
 
-    public IEnumerable<Article> GetAllForAdmin()
-    {
-        var articles = _articles.ToList();
-        return articles;
-    }
-
     public IEnumerable<Article> GetArticlesByCategoryId(int categoryId)
     {
         var articles = _articles.Where(a => a.CategoryId == categoryId).ToList();
