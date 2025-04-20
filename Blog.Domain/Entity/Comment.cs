@@ -67,7 +67,6 @@ public class Comment : RootEntity<int>
     {
         if (Likes.Any(x => x == userId))
             Likes.Remove(userId);
-
         else
             Likes.Add(userId);
     }
@@ -76,7 +75,6 @@ public class Comment : RootEntity<int>
     {
         if (Dislikes.Any(x => x == userId))
             Dislikes.Remove(userId);
-
         else
             Dislikes.Add(userId);
     }

@@ -12,12 +12,14 @@ public class ArticleService : IArticleService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IArticleRepository _articleRepository;
     private readonly IMapper _mapper;
+    private readonly AI _ai;
 
-    public ArticleService(IUnitOfWork unitOfWork, IArticleRepository articleRepository, IMapper mapper)
+    public ArticleService(IUnitOfWork unitOfWork, IArticleRepository articleRepository, IMapper mapper, AI ai)
     {
         _unitOfWork = unitOfWork;
         _articleRepository = articleRepository;
         _mapper = mapper;
+        _ai = ai;
     }
 
     public IEnumerable<ArticleViewModel> GetArticles()
@@ -27,9 +29,15 @@ public class ArticleService : IArticleService
         return models;
     }
 
-    public ArticleViewModel GetArticle(int id)
+    public async Task<ArticleViewModel> GetArticleAsync(int id)
     {
-        var model = _mapper.Map<ArticleViewModel>(_articleRepository.GetById(id));
+        //var model = _mapper.Map<ArticleViewModel>(_articleRepository.GetById(id));
+
+        var article = _articleRepository.GetById(id);
+        var articleSummary = await _ai.ChatAsync($"Summerize this: {article.Text}");
+
+        var model = new ArticleViewModel(article.Id, article.Header, article.Title, article.Text, article.Tags, article.PublishDate, article.Status.ToString(), article.Likes,
+            article.Dislikes, article.AuthorUserId, article.CategoryId, article.PreviewImageLink, articleSummary);
         return model;
     }
 
@@ -45,7 +53,7 @@ public class ArticleService : IArticleService
             request.PublishDate,
             requestUserId,
             request.categoryId);
-        
+
         _articleRepository.Add(article);
         _unitOfWork.Commit();
 

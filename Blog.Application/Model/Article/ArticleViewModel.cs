@@ -11,7 +11,8 @@ public record ArticleViewModel(int Id,
         List<int> Dislikes,
         int AuthorUserId,
         int CategoryId,
-        string PreviewImageLink);
+        string PreviewImageLink,
+        string Summary);
 
 //public class ArticleViewModel
 //{

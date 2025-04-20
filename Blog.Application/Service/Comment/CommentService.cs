@@ -26,7 +26,7 @@ public class CommentService : ICommentService
     public void ReplyComment(ReplyCommentRequest request, int requestUserId)
     {
         
-        var comment = _commentRepository.GetById(request.ParentCommentId);
+        var comment = _commentRepository.GetById(request.RelatedComment);
         comment.ReplyComment(request.Text, requestUserId);
 
         _commentRepository.Update(comment);

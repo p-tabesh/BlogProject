@@ -20,7 +20,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         //    .HasForeignKey(e => e.CategoryId)
         //    .OnDelete(DeleteBehavior.Restrict);
 
-        builder.Property(e => e.Name)
+        builder.Property(e => e.Title)
             .HasMaxLength(50);
 
         builder.Property(e => e.Description)

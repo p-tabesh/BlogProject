@@ -1,3 +1,4 @@
+using Blog.Application;
 using Blog.Application.Model.Article;
 using Blog.Infrastructure.Extention;
 using Blog.Presentation.Middlewares;
@@ -33,6 +34,8 @@ builder.Host.UseSerilog();
 builder.Services.AddServices();
 builder.Services.AddRepositories();
 builder.Services.AddUnitOfWork();
+
+builder.Services.AddScoped<AI>();
 
 // Authentication
 builder.Services.AddBlogAuthentication(builder.Configuration);

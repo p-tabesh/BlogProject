@@ -7,7 +7,7 @@ public class ArticleProfile : ProfileMapper
 {
     public ArticleProfile()
     {
-        CreateMap<Domain.Entity.Article, ArticleViewModel>();
+        CreateMap<Domain.Entity.Article,ArticleViewModel>();
         CreateMap<ArticleViewModel, Domain.Entity.Article>();
     }
 }

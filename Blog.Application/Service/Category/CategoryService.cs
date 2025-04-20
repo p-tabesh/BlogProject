@@ -23,4 +23,25 @@ public class CategoryService : ICategoryService
 
         return category.Id;
     }
+
+    public void DeActiveCategory(int categoryId)
+    {
+        var category = _categoryRepository.GetById(categoryId);
+        category.DeActiveCategory();
+        _categoryRepository.Update(category);
+        _unitOfWork.Commit();
+    }
+
+    public void EditCategory(EditCategoryRequest request)
+    {
+        var category = _categoryRepository.GetById(request.CategoryId);
+        category.EditCategory(request.Title, request.Description);
+        _categoryRepository.Update(category);
+        _unitOfWork.Commit();
+    }
+
+    public IEnumerable<CategoryViewModel> GetAll()
+    {
+        throw new NotImplementedException();
+    }
 }

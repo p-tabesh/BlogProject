@@ -45,9 +45,9 @@ public class ArticleController : BaseController
 
     [HttpGet]
     [Route("{id}")]
-    public IActionResult GetArticle(int id)
+    public async Task<IActionResult> GetArticle(int id)
     {
-        var article = _articleService.GetArticle(id);
+        var article = await _articleService.GetArticleAsync(id);
         return Ok(article);
     }
 
