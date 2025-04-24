@@ -17,7 +17,7 @@ public class AI
     {
         var url = _configuration["AI:Url"];
         var apiKey = _configuration["AI:ApiKey"];
-        //string url = "https://api.aimlapi.com/v1/chat/completions";
+        
         var client = new HttpClient();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
         var requestBody = new
@@ -34,11 +34,11 @@ public class AI
         var response = await client.PostAsync(url, requestContent);
         var responseContent = await response.Content.ReadAsStringAsync();
         using var doc = JsonDocument.Parse(responseContent);
-        string contentValue = doc?.RootElement
+        string contentValue = doc.RootElement
                                  .GetProperty("choices")[0]
                                  .GetProperty("message")
                                  .GetProperty("content")
-                                 .GetString();
+                                 .GetString()?? "Summerize failed";
         return contentValue;
     }
 }

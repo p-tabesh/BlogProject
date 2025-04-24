@@ -1,4 +1,5 @@
 ﻿using Blog.Infrastructure.Context;
+using Core.Repository.Model.Specifications;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,15 @@ public static class Extention
             query = includes.Aggregate(query, (current, include) => current.Include(include));
         }
 
+        return query;
+    }
+
+    public static IQueryable<T> Where<T>(this IQueryable<T> query, Specification<T> specification)
+    {
+        if (specification != null)
+        {
+            return query.Where(specification.Expression);
+        }
         return query;
     }
 }

@@ -3,6 +3,7 @@ using Blog.Domain.IRepository;
 using Blog.Infrastructure.Context;
 using Core.Repository.Model.Specifications;
 using Microsoft.EntityFrameworkCore;
+using Blog.Infrastructure.Extention;
 
 namespace Blog.Infrastructure.Repository;
 
@@ -29,9 +30,9 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
         return articles;
     }
 
-    public IEnumerable<Article> GetWithSpecifications(Specification<Article> spec)
+    public IEnumerable<Article> GetWithSpecifications(Specification<Article> specification)
     {
-        var articles = _articles.Where(spec.Expression);
+        var articles = _articles.Where(specification);
         return articles;
     }
 }
