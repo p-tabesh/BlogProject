@@ -1,11 +1,11 @@
 ﻿using Blog.Application.Model.Account;
 using Blog.Application.Service.Account;
-using Blog.Web.Extention;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using Blog.Admin.Extention;
+using Microsoft.AspNetCore.Authorization;
 
-namespace Blog.Web.Controllers;
+namespace Blog.Admin.Controllers;
 
 [ApiController]
 [Route("account")]
@@ -18,6 +18,7 @@ public class AccountController : BaseController
         _accountService = accountService;
     }
 
+    [AllowAnonymous]
     [HttpPost]
     [Route("login")]
     public IActionResult Login(LoginRequest request)
@@ -28,7 +29,6 @@ public class AccountController : BaseController
 
     [HttpGet]
     [Route("logout")]
-    [Authorize]
     public IActionResult Logout()
     {
         _accountService.Logout(new JwtSecurityTokenHandler().ReadJwtToken(AuthorizationValue));

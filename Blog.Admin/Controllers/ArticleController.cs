@@ -7,13 +7,11 @@ namespace Blog.Admin.Controllers;
 [Route("articles")]
 public class ArticleController : ControllerBase
 {
-    private readonly ILogger<ArticleController> _logger;
     private readonly IAdminArticleService _adminArticleService;
 
     public ArticleController(ILogger<ArticleController> logger, IAdminArticleService adminArticleService)
     {
         _adminArticleService = adminArticleService;
-        _logger = logger;
     }
 
     [HttpGet]

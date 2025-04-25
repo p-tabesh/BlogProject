@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Blog.Application.Service.Article;
 using Blog.Application.Model.Article;
 using Blog.Web.Extention;
-using AutoMapper;
 
 namespace Blog.Web.Controllers;
 
@@ -11,22 +10,10 @@ namespace Blog.Web.Controllers;
 public class ArticleController : BaseController
 {
     private readonly IArticleService _articleService;
-    private ILogger<ArticleController> _logger;
-    private IMapper _mapper;
 
-    public ArticleController(IArticleService articleService,IMapper mapper, ILogger<ArticleController> logger)
+    public ArticleController(IArticleService articleService)
     {
         _articleService = articleService;
-        _logger = logger;   
-        _mapper = mapper;
-    }
-
-    [HttpGet]
-    [Route("test")]
-    public IActionResult TestLog(string message)
-    {
-        _logger.LogError(message);    
-        return Ok(message);
     }
 
     [HttpGet]
@@ -34,6 +21,48 @@ public class ArticleController : BaseController
     {
         var articles = _articleService.GetArticles();
         return Ok(articles);
+    }
+
+    [HttpGet]
+    [Route("recents")]
+    public IActionResult GetRecentArticles()
+    {
+        return Ok();
+    }
+
+    [HttpGet]
+    [Route("suggested")]
+    public IActionResult GetSuggestedArticles()
+    {
+        return Ok();
+    }
+
+    [HttpGet]
+    [Route("trends")]
+    public IActionResult GetTrendArticles()
+    {
+        return Ok();
+    }
+
+    [HttpGet]
+    [Route("trend-tags")]
+    public IActionResult GetTrendTags()
+    {
+        return Ok();
+    }
+
+    [HttpGet]
+    [Route("search")]
+    public IActionResult GetArticleByTextSearch([FromQuery] string search)
+    {
+        return Ok();
+    }
+
+    [HttpGet]
+    [Route("filter")]
+    public IActionResult GetWithFilter([FromQuery] ArticleFilterModel model)
+    {
+        return Ok();
     }
 
     [HttpPost]
@@ -45,9 +74,9 @@ public class ArticleController : BaseController
 
     [HttpGet]
     [Route("{id}")]
-    public async Task<IActionResult> GetArticle(int id)
+    public IActionResult GetArticle(int id)
     {
-        var article = await _articleService.GetArticleAsync(id);
+        var article = _articleService.GetArticleById(id);
         return Ok(article);
     }
 

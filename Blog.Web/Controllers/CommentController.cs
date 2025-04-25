@@ -10,6 +10,7 @@ namespace Blog.Web.Controllers;
 public class CommentController : BaseController
 {
     private ICommentService _commentSerivce;
+
     public CommentController(ICommentService commentService)
     {
         _commentSerivce = commentService;

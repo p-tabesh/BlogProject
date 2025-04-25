@@ -17,7 +17,7 @@ public class CommentController : Controller
     [HttpGet]
     public IActionResult GetComments()
     {
-        var comments =_adminCommentService.GetAll();
+        var comments =_adminCommentService.GetAllComments();
         return Ok(comments);
     }
 
@@ -34,14 +34,6 @@ public class CommentController : Controller
     public IActionResult RejectComment(int id)
     {
         _adminCommentService.RejectComment(id);
-        return Ok();
-    }
-
-    [HttpPut]
-    [Route("{id}/disable-show")]
-    public IActionResult DisableShow(int id)
-    {
-        _adminCommentService.DisableShow(id);
         return Ok();
     }
 }

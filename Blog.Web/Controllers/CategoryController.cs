@@ -14,24 +14,18 @@ public class CategoryController : Controller
         _categoryService = categoryService;
     }
 
-    [HttpPost]
-    public IActionResult CreateCategory(AddCategoryRequest request)
-    {
-        var id = _categoryService.CreateCategory(request);
-        return CreatedAtAction(nameof(CreateCategory), new { Id = id });
-    }
-
     [HttpGet]
     public IActionResult GetCategories()
     {
-        return Ok();
+        var categories = _categoryService.GetAll();
+        return Ok(categories);
     }
 
     [HttpGet]
     [Route("{id}")]
     public IActionResult GetCategory(int id)
     {
-
-        return Ok();
+        var category = _categoryService.GetById(id);
+        return Ok(category);
     }
 }

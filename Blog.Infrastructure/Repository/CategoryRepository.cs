@@ -6,10 +6,6 @@ namespace Blog.Infrastructure.Repository;
 
 public class CategoryRepository : CrudRepository<Category>, ICategoryRepository
 {
-    private readonly BlogDbContext _dbContext;
     public CategoryRepository(BlogDbContext dbContext)
-        : base(dbContext, x=> x.ChildCategories)
-    {
-        _dbContext = dbContext;
-    }
+        : base(dbContext, x => x.ChildCategories) { }
 }

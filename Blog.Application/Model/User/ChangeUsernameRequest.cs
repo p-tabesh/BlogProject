@@ -1,6 +1,3 @@
 ﻿namespace Blog.Application.Model.User;
 
-public class ChangeUsernameRequest
-{
-
-}
+public record ChangeUsernameRequest(string NewUsername);

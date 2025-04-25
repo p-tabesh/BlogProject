@@ -1,13 +1,14 @@
-﻿using Blog.Application.Model.Profile;
-using Blog.Application.Model.User;
+﻿using Blog.Application.Model.User;
 using Blog.Application.Service.User;
+using Blog.Web.Extention;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Web.Controllers;
 
 [ApiController]
 [Route("user")]
-public class UserController : Controller
+public class UserController : BaseController
 {
     private readonly IUserService _userService;
     public UserController(IUserService userService)
@@ -15,6 +16,8 @@ public class UserController : Controller
         _userService = userService;
     }
 
+
+    [AllowAnonymous]
     [HttpPost]
     [Route("register")]
     public IActionResult RegisterUser(RegisterRequest request)
@@ -27,7 +30,7 @@ public class UserController : Controller
     [Route("change-username")]
     public IActionResult ChangeUsername(ChangeUsernameRequest request)
     {
-        _userService.ChangeUsername(request);
+        _userService.ChangeUsername(request, RequestUserId);
         return Ok();
     }
 
@@ -35,14 +38,47 @@ public class UserController : Controller
     [Route("change-password")]
     public IActionResult ChangePassword(ChangePasswordRequest request)
     {
-        _userService.ChangePassword(request);
+        _userService.ChangePassword(request, RequestUserId);
+        return Ok();
+    }
+
+    [HttpPost]
+    [Route("profile/create")]
+    public IActionResult CreateProfile(CreateProfileRequest request)
+    {
+        _userService.CreateProfile(request, RequestUserId);
         return Ok();
     }
 
     [HttpPut]
-    [Route("create-profile")]
-    public IActionResult CreateProfile(CreateProfileRequest request)
+    [Route("profile/edit")]
+    public IActionResult EditProfile(EditProfileRequest request)
     {
+        _userService.EditProfile(request, RequestUserId);
         return Ok();
+    }
+
+    [HttpPut]
+    [Route("profile/change-image")]
+    public IActionResult ChangeProfileImage(ChangeProfileImageLinkRequest request)
+    {
+        _userService.ChangeProfileImageLink(request, RequestUserId);
+        return Ok();
+    }
+
+    [HttpGet]
+    [Route("{id}/profile")]
+    public IActionResult GetProfileByUserId(int id)
+    {
+        var profile = _userService.GetUserProfile(id);
+        return Ok(profile);
+    }
+
+    [HttpGet]
+    [Route("profile")]
+    public IActionResult GetUserProfile()
+    {
+        var profile = _userService.GetUserProfile(RequestUserId);
+        return Ok(profile);
     }
 }

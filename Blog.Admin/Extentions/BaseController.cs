@@ -1,8 +1,8 @@
-﻿using Blog.Web.Middleware;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Blog.Admin.Middleware;
 
-namespace Blog.Web.Extention;
+namespace Blog.Admin.Extention;
 
 public class BaseController:ControllerBase
 {

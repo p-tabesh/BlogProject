@@ -7,15 +7,9 @@ namespace Blog.Infrastructure.Repository;
 
 public class CommentRepository : CrudRepository<Comment>, ICommentRepository
 {
-    private BlogDbContext _dbContext;
-    private DbSet<Comment> _comments;
     public CommentRepository(BlogDbContext dbContext)
-        : base(dbContext, e => e.ChildrenComments)
-    {
-        _dbContext = dbContext;
-        _comments = dbContext.Set<Comment>();
-    }
-
+        : base(dbContext, e => e.ChildrenComments) { }
+    
     public IEnumerable<Comment> GetCommentsByArticleId(int articleId)
     {
         var comments = Entities.Where(c => c.ArticleId == articleId && c.IsDeleted == false);

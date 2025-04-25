@@ -15,6 +15,7 @@ public class Profile : RootEntity<int>
     private Profile() { }
     public Profile(string fullName, Gender gender, string birthPlace, string bio, string profileImageLink, int userId)
     {
+        Id = userId;
         FullName = string.IsNullOrEmpty(fullName) ? throw new ArgumentNullException() : fullName;
         Gender = gender;
         BirthPlace = string.IsNullOrEmpty(birthPlace) ? throw new ArgumentNullException() : birthPlace;
@@ -22,7 +23,7 @@ public class Profile : RootEntity<int>
         ProfileImageLink = profileImageLink;
     }
 
-    public void EditProfile(string fullName, Gender gender, string birthPlace, string bio)
+    public void Edit(string fullName, Gender gender, string birthPlace, string bio)
     { 
         FullName = fullName;
         Gender = gender;

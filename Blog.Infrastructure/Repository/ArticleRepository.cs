@@ -9,30 +9,24 @@ namespace Blog.Infrastructure.Repository;
 
 public class ArticleRepository : CrudRepository<Article>, IArticleRepository
 {
-    private readonly BlogDbContext _dbContext;
-    private readonly DbSet<Article> _articles;
     public ArticleRepository(BlogDbContext dbContext)
-        : base(dbContext)
-    {
-        _dbContext = dbContext;
-        _articles = dbContext.Article;
-    }
+        : base(dbContext) { }
 
     public IEnumerable<Article> GetArticlesByCategoryId(int categoryId)
     {
-        var articles = _articles.Where(a => a.CategoryId == categoryId).ToList();
+        var articles = Entities.Where(a => a.CategoryId == categoryId).ToList();
         return articles;
     }
 
     public IEnumerable<Article> GetArticlesByUserId(int userId)
     {
-        var articles = _articles.Where(a => a.AuthorUserId == userId).ToList();
+        var articles = Entities.Where(a => a.AuthorUserId == userId).ToList();
         return articles;
     }
 
     public IEnumerable<Article> GetWithSpecifications(Specification<Article> specification)
     {
-        var articles = _articles.Where(specification);
+        var articles = Entities.Where(specification);
         return articles;
     }
 }

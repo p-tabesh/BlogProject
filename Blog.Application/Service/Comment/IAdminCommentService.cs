@@ -4,9 +4,7 @@ namespace Blog.Application.Service.Comment;
 
 public interface IAdminCommentService
 {
-    IEnumerable<CommentViewModel> GetAll();
+    IEnumerable<CommentViewModel> GetAllComments();
     void ShowComment(int commentId);
     void RejectComment(int commentId);
-    void DisableShow(int commentId);
-
 }

@@ -2,20 +2,18 @@
 using Blog.Application.Model.Article;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
+using Microsoft.Extensions.Logging;
 
 namespace Blog.Application.Service.Article;
 
-public class AdminArticleService : IAdminArticleService
+public class AdminArticleService : BaseService<AdminArticleService>, IAdminArticleService
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IArticleRepository _articleRepository;
-    private readonly IMapper _mapper;   
 
-    public AdminArticleService(IUnitOfWork unitOfWork, IArticleRepository articleRepository, IMapper mapper)
+    public AdminArticleService(IUnitOfWork unitOfWork, IArticleRepository articleRepository, IMapper mapper, ILogger<AdminArticleService> logger)
+        : base(unitOfWork, mapper, logger)
     {
-        _unitOfWork = unitOfWork;
-        _articleRepository = articleRepository; 
-        _mapper = mapper;
+        _articleRepository = articleRepository;
     }
 
     public void Accept(int articleId)
@@ -27,7 +25,7 @@ public class AdminArticleService : IAdminArticleService
     public IEnumerable<ArticleViewModel> GetArticles()
     {
         var articles = _articleRepository.GetAll();
-        var models = _mapper.Map<List<ArticleViewModel>>(articles);
+        var models = Mapper.Map<List<ArticleViewModel>>(articles);
         return models;
     }
 

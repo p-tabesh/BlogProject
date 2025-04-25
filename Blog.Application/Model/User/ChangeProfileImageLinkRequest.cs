@@ -1,3 +1,3 @@
-﻿namespace Blog.Application.Model.Profile;
+﻿namespace Blog.Application.Model.User;
 
 public record ChangeProfileImageLinkRequest(string ImageLink);

@@ -45,15 +45,7 @@ public class Comment : RootEntity<int>
         this.IsShow = true;
     }
 
-    public void DisableShow()
-    {
-        if (IsShow == false)
-            return;
-
-        this.IsShow = false;
-    }
-
-    public void RejectComment()
+    public void Reject()
     {
         if (IsShow == false)
             return;

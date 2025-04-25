@@ -1,14 +1,21 @@
 using Blog.Application;
 using Blog.Application.Model.Article;
 using Blog.Infrastructure.Extention;
-using Blog.Presentation.Middlewares;
+using Blog.Web.Middleware;
 using Blog.Web.Extention;
 using Elastic.Serilog.Sinks;
 using Serilog;
 using Serilog.Exceptions;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(
+    option =>
+    {
+        option.AddPolicy("AllowAll", builder => builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
+    });
 
 builder.Services.AddControllers();
 
@@ -39,6 +46,7 @@ builder.Services.AddScoped<AI>();
 
 // Authentication
 builder.Services.AddBlogAuthentication(builder.Configuration);
+builder.Services.AddAuthorization();
 
 // Swagger Configuration
 builder.Services.AddBlogSwaggerConfiguration();
@@ -51,6 +59,10 @@ builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 builder.Services.AddAutoMapper(typeof(ArticleProfile).Assembly);
 
 
+
+builder.Services.AddBlogRedis(builder.Configuration);
+
+
 var app = builder.Build();
 
 
@@ -61,7 +73,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
-
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

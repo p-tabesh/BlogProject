@@ -2,7 +2,6 @@
 using Blog.Application.Service.Article;
 using Blog.Application.Service.Category;
 using Blog.Application.Service.Comment;
-using Blog.Application.Service.User;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
 using Blog.Infrastructure.Repository;
@@ -11,7 +10,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.OpenApi.Models;
 
-namespace Blog.Web.Extention;
+namespace Blog.Admin.Extention;
 
 public static partial class ConfigurationExtention
 {
@@ -25,11 +24,10 @@ public static partial class ConfigurationExtention
 
     public static void AddServices(this IServiceCollection services)
     {
-        services.AddScoped<ICategoryService, CategoryService>();
-        services.AddScoped<IArticleService, ArticleService>();
+        services.AddScoped<IAdminCategoryService, AdminCategoryService>();
+        services.AddScoped<IAdminArticleService, AdminArticleService>();
         services.AddScoped<IAccountService, AccountService>();
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<ICommentService, CommentService>();
+        services.AddScoped<IAdminCommentService,AdminCommentService>();
     }
 
     public static void AddBlogSwaggerConfiguration(this IServiceCollection services)

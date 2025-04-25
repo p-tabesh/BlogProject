@@ -18,17 +18,17 @@ public class Category : RootEntity<int>
         ParentCategoryId = parentCategoryId;
     }
 
-    public void DeActiveCategory()
+    public void DeActive()
     {
         IsActive = false;
     }
 
-    public void ActiveCategory()
+    public void Active()
     {
         IsActive = true;
     }
 
-    public void EditCategory(string title, string description)
+    public void Edit(string title, string description)
     {
         Title = title;
         Description = description;

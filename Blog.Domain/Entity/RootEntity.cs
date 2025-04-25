@@ -2,5 +2,5 @@
 
 public abstract class RootEntity<T>
 {
-    public T Id { get; }
+    public T Id { get; protected set; }
 }

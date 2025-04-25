@@ -14,5 +14,6 @@ public class ArticleBySearchTextSpecification : Specification<Article>
 
     protected override bool IsApplicable => !string.IsNullOrWhiteSpace(_searchText);
 
-    public override Expression<Func<Article, bool>> Expression => article => article.Title.Contains(_searchText) || article.Header.Contains(_searchText);
+    public override Expression<Func<Article, bool>> Expression => article => article.Title.Contains(_searchText) || 
+                                                                             article.Header.Contains(_searchText);
 }

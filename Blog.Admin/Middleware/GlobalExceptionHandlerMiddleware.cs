@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 
 
-namespace Blog.Web.Middleware;
+namespace Blog.Admin.Middleware;
 
 public class GlobalExceptionHandlerMiddleware : IMiddleware
 {

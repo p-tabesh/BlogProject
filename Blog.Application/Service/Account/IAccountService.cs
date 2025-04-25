@@ -1,11 +1,12 @@
 ﻿using Blog.Application.Model.Account;
 using Blog.Domain.Entity;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Blog.Application.Service.Account;
 
 public interface IAccountService
 {
-    public Domain.Entity.User GetUser(LoginRequest request);
     public bool IsTokenBlackListed(string sid);
-    public string GenerateToken(int userId);
+    public string GetLoginToken(LoginRequest request);
+    public void Logout(JwtSecurityToken token);
 }

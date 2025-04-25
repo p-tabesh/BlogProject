@@ -66,7 +66,7 @@ public class Article : RootEntity<int>
         Status = Status.Rejected;
     }
 
-    public void UpdateArticle(string newHeader, string newTitle, string newText, string newPreviewImageLink)
+    public void Edit(string newHeader, string newTitle, string newText, string newPreviewImageLink)
     {
         Header = newHeader;
         Title = newTitle;

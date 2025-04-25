@@ -2,42 +2,38 @@
 using Blog.Application.Model.Comment;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
+using Microsoft.Extensions.Logging;
 
 namespace Blog.Application.Service.Comment;
 
-public class AdminCommentService : IAdminCommentService
+public class AdminCommentService : BaseService<AdminCommentService>, IAdminCommentService
 {
     private readonly ICommentRepository _commentRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public AdminCommentService(ICommentRepository commentRepository, IUnitOfWork unitOfWork, IMapper mapper)
+    public AdminCommentService(ICommentRepository commentRepository, IUnitOfWork unitOfWork, IMapper mapper, ILogger<AdminCommentService> logger)
+        :base(unitOfWork,mapper, logger)
     {
         _commentRepository = commentRepository;
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
-    public void DisableShow(int commentId)
-    {
-        var comment = _commentRepository.GetById(commentId);
-        comment.DisableShow();
-    }
-
-    public IEnumerable<CommentViewModel> GetAll()
+    public IEnumerable<CommentViewModel> GetAllComments()
     {
         var comments = _commentRepository.GetAll();
-        var models = _mapper.Map<List<CommentViewModel>>(comments);   
+        var models = Mapper.Map<List<CommentViewModel>>(comments);
         return models;
     }
 
     public void RejectComment(int commentId)
     {
-        throw new NotImplementedException();
+        var comment = _commentRepository.GetById(commentId);
+        comment.Reject();
+        _commentRepository.Update(comment);
+        UnitOfWork.Commit();
     }
 
     public void ShowComment(int commentId)
     {
-        throw new NotImplementedException();
+        var comment = _commentRepository.GetById(commentId);
+        comment.Show();
     }
 }
