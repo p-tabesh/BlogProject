@@ -7,6 +7,6 @@ public record CreateArticleRequest(
     List<string> Tags,
     DateTime? PublishDate,
     string PreviewImageLink,
-    int categoryId
+    int CategoryId
     );
 

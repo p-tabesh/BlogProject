@@ -6,6 +6,7 @@ using Blog.Web.Extention;
 using Elastic.Serilog.Sinks;
 using Serilog;
 using Serilog.Exceptions;
+using AutoMapper;
 
 
 
@@ -56,7 +57,13 @@ builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 
 
 // Mapper Configuration
-builder.Services.AddAutoMapper(typeof(ArticleProfile).Assembly);
+var mapperConfiguration = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile<ArticleProfileMapper>();
+});
+IMapper mapper = mapperConfiguration.CreateMapper();
+builder.Services.AddSingleton(mapper);
+//builder.Services.AddAutoMapper(typeof(ArticleProfile).Assembly);
 
 
 

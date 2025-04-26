@@ -10,10 +10,13 @@ namespace Blog.Application.Service.Article;
 public class ArticleService : BaseService<ArticleService>, IArticleService
 {
     private readonly IArticleRepository _articleRepository;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public ArticleService(IUnitOfWork unitOfWork, IArticleRepository articleRepository, IMapper mapper, ILogger<ArticleService> logger)
+    public ArticleService(IUnitOfWork unitOfWork, IArticleRepository articleRepository, ICategoryRepository categoryRepository,
+        IMapper mapper, ILogger<ArticleService> logger)
         : base(unitOfWork, mapper, logger)
     {
+        _categoryRepository = categoryRepository;
         _articleRepository = articleRepository;
     }
 
@@ -32,15 +35,19 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
 
     public int CreateArticle(CreateArticleRequest request, int requestUserId)
     {
-        var article = new Domain.Entity.Article(request.Header,
-            request.Title,
-            request.Text,
-            request.Tags,
-            request.PreviewImageLink,
-            request.PublishDate,
-            requestUserId,
-            request.categoryId);
+        var category = _categoryRepository.GetById(request.CategoryId);
+        if (category == null)
+            throw new Exception("category doesn't exists");
 
+        //var article = new Domain.Entity.Article(request.Header,
+        //    request.Title,
+        //    request.Text,
+        //    request.Tags,
+        //    request.PreviewImageLink,
+        //    request.PublishDate,
+        //    requestUserId,
+        //    request.CategoryId);
+        var article = Mapper.Map<Domain.Entity.Article>(request, option => option.Items["AuthorUserId"] = requestUserId);
         _articleRepository.Add(article);
         UnitOfWork.Commit();
 

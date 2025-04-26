@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Blog.Application.Service.Article;
 using Blog.Application.Model.Article;
 using Blog.Web.Extention;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Blog.Web.Controllers;
 
@@ -66,6 +67,7 @@ public class ArticleController : BaseController
     }
 
     [HttpPost]
+    [Authorize]
     public IActionResult CreateArticle(CreateArticleRequest request)
     {
         var id = _articleService.CreateArticle(request, RequestUserId);
@@ -82,6 +84,7 @@ public class ArticleController : BaseController
 
     [HttpPost]
     [Route("{id}/like")]
+    [Authorize]
     public IActionResult LikeArticle(int id)
     {
         _articleService.LikeArticle(id, RequestUserId);
@@ -90,6 +93,7 @@ public class ArticleController : BaseController
 
     [HttpPost]
     [Route("{id}/dislike")]
+    [Authorize]
     public IActionResult DislikeArticle(int id)
     {
         _articleService.DislikeArticle(id, RequestUserId);
