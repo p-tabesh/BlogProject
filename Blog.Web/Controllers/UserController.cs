@@ -76,7 +76,8 @@ public class UserController : BaseController
 
     [HttpGet]
     [Route("profile")]
-    public IActionResult GetUserProfile()
+    [Authorize]
+    public IActionResult GetCurrentUserProfile()
     {
         var profile = _userService.GetUserProfile(RequestUserId);
         return Ok(profile);

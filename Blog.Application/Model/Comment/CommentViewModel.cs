@@ -1,6 +1,6 @@
 ﻿namespace Blog.Application.Model.Comment;
 
-public record CommentViewModel(string Text,
+public record CommentViewModel(int Id,string Text,
     bool IsShow,
     DateTime CreationDate,
     int UserId,

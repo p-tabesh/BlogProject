@@ -7,12 +7,11 @@ public record ArticleViewModel(int Id,
         List<string> Tags,
         DateTime PublishDate,
         string Status,
-        List<int> Likes,
-        List<int> Dislikes,
+        List<int>? Likes,
+        List<int>? Dislikes,
         int AuthorUserId,
         int CategoryId,
-        string PreviewImageLink,
-        string Summary);
+        string PreviewImageLink);
 
 //public class ArticleViewModel
 //{

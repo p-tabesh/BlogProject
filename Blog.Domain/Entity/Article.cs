@@ -17,7 +17,7 @@ public class Article : RootEntity<int>
     public int CategoryId { get; private set; }
     public string PreviewImageLink { get; private set; }
 
-    public Article() { }
+    private Article() { }
 
     public Article(string header, string title, string text, List<string> tags, string previewImageLink, DateTime? publishDate, int authorUserId, int categoryId)
     {

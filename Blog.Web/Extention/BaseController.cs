@@ -22,7 +22,7 @@ public class BaseController:ControllerBase
         }
     }
 
-    public override OkObjectResult Ok(object? value)
+    public override OkObjectResult Ok(object? value = null)
     {
         if (value == null)
         {

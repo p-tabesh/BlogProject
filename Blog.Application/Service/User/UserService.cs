@@ -68,6 +68,10 @@ public class UserService : BaseService<UserService>, IUserService
     public ProfileViewModel GetUserProfile(int userId)
     {
         var user = _userRepository.GetById(userId);
+
+        if (user?.Profile == null)
+            throw new Exception("user doesn't have profile");
+
         var model = Mapper.Map<ProfileViewModel>(user);
         return model;
     }
@@ -75,6 +79,10 @@ public class UserService : BaseService<UserService>, IUserService
     public int RegisterUser(RegisterRequest request)
     {
         var username = Username.Create(request.Username);
+
+        if (_userRepository.GetByUsername(username) != null)
+            throw new Exception("this username already exists ");
+
         var password = Password.Create(request.Password);
         var email = Email.Create(request.Email);
 

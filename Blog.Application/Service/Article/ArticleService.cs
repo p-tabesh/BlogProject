@@ -70,6 +70,9 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
     public void LikeArticle(int articleId, int requestUserId)
     {
         var article = _articleRepository.GetById(articleId);
+        if (article == null)
+            throw new Exception("article doesn't exists");
+
         article.Like(requestUserId);
 
         _articleRepository.Update(article);
@@ -79,6 +82,9 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
     public void DislikeArticle(int articleId, int requestUserId)
     {
         var article = _articleRepository.GetById(articleId);
+        if (article == null)
+            throw new Exception("article doesn't exists");
+
         article.Dislike(requestUserId);
 
         _articleRepository.Update(article);

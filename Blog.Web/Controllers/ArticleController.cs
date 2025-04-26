@@ -28,7 +28,7 @@ public class ArticleController : BaseController
     [Route("recents")]
     public IActionResult GetRecentArticles()
     {
-        return Ok();
+        return base.Ok();
     }
 
     [HttpGet]

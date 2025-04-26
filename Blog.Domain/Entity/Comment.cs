@@ -16,11 +16,14 @@ public class Comment : RootEntity<int>
     public List<Comment>? ChildrenComments { get; private set; }
     public Comment? RelatedComment { get; private set; }
 
-    private Comment() { }
+    private Comment() 
+    {
+        ChildrenComments = new List<Comment>();
+    }
 
     public Comment(string text, int? relatedCommentId, int articleId, int userId)
     {
-        Text = string.IsNullOrEmpty(text) ? text : throw new ArgumentException("Invalid Text");
+        Text = !string.IsNullOrEmpty(text) ? text : throw new ArgumentException("Invalid Text");
         ArticleId = articleId;
         RelatedCommentId = relatedCommentId;
         UserId = userId;

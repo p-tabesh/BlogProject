@@ -7,6 +7,8 @@ using Elastic.Serilog.Sinks;
 using Serilog;
 using Serilog.Exceptions;
 using AutoMapper;
+using Blog.Application.Model.Category;
+using Blog.Application.Model.Comment;
 
 
 
@@ -60,9 +62,13 @@ builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 var mapperConfiguration = new MapperConfiguration(cfg =>
 {
     cfg.AddProfile<ArticleProfileMapper>();
+    cfg.AddProfile<CommentProfileMapper>();
+    cfg.AddProfile<CategoryProfileMapper>();
 });
+
 IMapper mapper = mapperConfiguration.CreateMapper();
 builder.Services.AddSingleton(mapper);
+
 //builder.Services.AddAutoMapper(typeof(ArticleProfile).Assembly);
 
 
