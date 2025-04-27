@@ -13,13 +13,7 @@ public class CommentRepository : CrudRepository<Comment>, ICommentRepository
     
     public IEnumerable<Comment> GetByArticleId(int articleId)
     {
-        var comments = Entities.Where(c => c.ArticleId == articleId && c.IsDeleted == false && c.IsShow == true /*&& c.RelatedCommentId != null*/);
-        return comments;
-    }
-
-    public IEnumerable<Comment> GetCommentsForAdmin()
-    {
-        var comments = Entities.ToList();
+        var comments = Entities.Where(c => c.ArticleId == articleId && c.IsDeleted == false && c.IsShow == true);
         return comments;
     }
 }

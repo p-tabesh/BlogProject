@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Blog.Application.Model.Category;
 using Blog.Application.Model.Comment;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
@@ -18,7 +19,7 @@ public class CommentService : BaseService<CommentService>, ICommentService
 
     public int AddComment(AddCommentRequest request, int requestUserId)
     {
-        var comment = new Domain.Entity.Comment(request.Text, request.RelatedCommentId, request.ArticleId, requestUserId);
+        var comment = CommentMapper.MapToEntity(request, requestUserId);
         _commentRepository.Add(comment);
         UnitOfWork.Commit();
 
@@ -35,8 +36,14 @@ public class CommentService : BaseService<CommentService>, ICommentService
 
     public IEnumerable<CommentViewModel> GetCommentsByArticleId(int articleId)
     {
-        var comments = _commentRepository.GetByArticleId(articleId);
-        return Mapper.Map<List<CommentViewModel>>(comments);
+        var comments = _commentRepository.GetByArticleId(articleId).Where(c => c.RelatedCommentId == null).ToList();
+        List<CommentViewModel> models = new();
+        foreach (var comment in comments)
+        {
+            models.Add(CommentMapper.MapFromEntity(comment));
+        }
+
+        return models;
     }
 
     public void LikeComment(int commentId, int userId)

@@ -1,4 +1,5 @@
-﻿using Blog.Domain.IRepository;
+﻿using Blog.Domain.Entity;
+using Blog.Domain.IRepository;
 using Blog.Infrastructure.Context;
 using Blog.Infrastructure.Extention;
 using Microsoft.EntityFrameworkCore;
@@ -6,9 +7,10 @@ using System.Linq.Expressions;
 
 namespace Blog.Infrastructure.Repository;
 
-public class CrudRepository<TEntity> : ICrudRepository<TEntity> where TEntity : class
+public class CrudRepository<TEntity> : ICrudRepository<TEntity> where TEntity : RootEntity<int>
 {
     public DbSet<TEntity> Entities { get; init; }
+    public IQueryable<TEntity> QueryableEntities { get; init; }
 
     public CrudRepository(BlogDbContext dbContext)
     {
@@ -18,7 +20,7 @@ public class CrudRepository<TEntity> : ICrudRepository<TEntity> where TEntity : 
     public CrudRepository(BlogDbContext dbContext, params Expression<Func<TEntity, object>>[] includes)
     {
         Entities = dbContext.Set<TEntity>();
-        Entities.IncludeMultiple(includes);
+        QueryableEntities = Entities.IncludeMultiple(includes);
     }
 
     public void Add(TEntity entity)
@@ -34,7 +36,7 @@ public class CrudRepository<TEntity> : ICrudRepository<TEntity> where TEntity : 
 
     public TEntity GetById(int id)
     {
-        var entity = Entities.Find(id);
+        var entity = QueryableEntities.FirstOrDefault(x => x.Id == id);
         return entity;
     }
 
