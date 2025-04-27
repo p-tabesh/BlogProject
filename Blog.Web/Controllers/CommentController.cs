@@ -18,7 +18,7 @@ public class CommentController : BaseController
     }
 
     [HttpGet]
-    public IActionResult GetCommentByArticleId(int articleId)
+    public IActionResult GetCommentsByArticleId(int articleId)
     {
         var comments = _commentSerivce.GetCommentsByArticleId(articleId);
         return Ok(comments);

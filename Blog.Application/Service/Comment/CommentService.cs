@@ -35,9 +35,8 @@ public class CommentService : BaseService<CommentService>, ICommentService
 
     public IEnumerable<CommentViewModel> GetCommentsByArticleId(int articleId)
     {
-        var comments = _commentRepository.GetCommentsByArticleId(articleId);
-        var rootComments = comments.Where(c => c.RelatedCommentId == null);
-        return Mapper.Map<List<CommentViewModel>>(rootComments);
+        var comments = _commentRepository.GetByArticleId(articleId);
+        return Mapper.Map<List<CommentViewModel>>(comments);
     }
 
     public void LikeComment(int commentId, int userId)

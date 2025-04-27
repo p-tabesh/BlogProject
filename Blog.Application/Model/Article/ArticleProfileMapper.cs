@@ -1,6 +1,4 @@
-﻿using Blog.Domain.Entity;
-using System.Runtime.CompilerServices;
-using ProfileMapper = AutoMapper.Profile;
+﻿using ProfileMapper = AutoMapper.Profile;
 
 namespace Blog.Application.Model.Article;
 
