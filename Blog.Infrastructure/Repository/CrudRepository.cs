@@ -2,6 +2,7 @@
 using Blog.Domain.IRepository;
 using Blog.Infrastructure.Context;
 using Blog.Infrastructure.Extention;
+using Core.Repository.Model.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -48,5 +49,11 @@ public class CrudRepository<TEntity> : ICrudRepository<TEntity> where TEntity : 
     public void Update(TEntity entity)
     {
         Entities.Update(entity);
+    }
+
+    public IEnumerable<TEntity> GetWithSpecification(Specification<TEntity> specification)
+    {
+        var entities = Entities.Where(specification).ToList();
+        return entities;
     }
 }

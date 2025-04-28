@@ -10,4 +10,8 @@ public interface IArticleService
     public void EditArticle(UpdateArticleRequest request, int requestUserId);
     public void LikeArticle(int articleId, int requestUserId);
     public void DislikeArticle(int articleId, int requestUserId);
+    public ArticleViewModel GetRecentArticles();
+    public ArticleViewModel GetPopularArticles();
+    public ArticleViewModel GetByTextSearch(string search);
+    public ArticleViewModel GetWithFilter(ArticleFilterModel filter);
 }

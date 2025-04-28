@@ -12,21 +12,15 @@ public class ArticleRepository : CrudRepository<Article>, IArticleRepository
     public ArticleRepository(BlogDbContext dbContext)
         : base(dbContext) { }
 
-    public IEnumerable<Article> GetArticlesByCategoryId(int categoryId)
-    {
-        var articles = Entities.Where(a => a.CategoryId == categoryId).ToList();
-        return articles;
-    }
 
-    public IEnumerable<Article> GetArticlesByUserId(int userId)
+    public IEnumerable<Article> GetSuggestedForUser(int userId)
     {
-        var articles = Entities.Where(a => a.AuthorUserId == userId).ToList();
-        return articles;
-    }
+        var likedByUser = Entities.Where(a => a.Likes.Any(x => x == userId));
+        var tags = new List<string>();
+        foreach (var a in likedByUser)
+            tags.AddRange(a.Tags);
 
-    public IEnumerable<Article> GetWithSpecifications(Specification<Article> specification)
-    {
-        var articles = Entities.Where(specification);
+        var articles = Entities.Where(article => article.Tags.Any(tag => tags.Contains(tag)));
         return articles;
     }
 }

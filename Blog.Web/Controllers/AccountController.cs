@@ -22,7 +22,7 @@ public class AccountController : BaseController
     [Route("login")]
     public IActionResult Login(LoginRequest request)
     {
-        var token = _accountService.GetLoginToken(request);
+        var token = _accountService.GetLoginToken(request,false);
         return Ok(new { Token = token });
     }
 

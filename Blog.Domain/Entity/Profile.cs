@@ -21,6 +21,7 @@ public class Profile : RootEntity<int>
         BirthPlace = string.IsNullOrEmpty(birthPlace) ? throw new ArgumentNullException() : birthPlace;
         Bio = string.IsNullOrEmpty(bio) ? throw new ArgumentNullException() : bio;
         ProfileImageLink = profileImageLink;
+        CreationDate = DateTime.UtcNow;
     }
 
     public void Edit(string fullName, Gender gender, string birthPlace, string bio)

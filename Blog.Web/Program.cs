@@ -8,7 +8,6 @@ using Serilog;
 using Serilog.Exceptions;
 using AutoMapper;
 using Blog.Application.Model.Category;
-using Blog.Application.Model.Comment;
 
 
 
@@ -32,6 +31,7 @@ builder.Services.AddBlogDbContext(builder.Configuration);
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .Enrich.WithExceptionDetails()
+    .WriteTo.Console()
     .WriteTo.Elasticsearch(new Serilog.Sinks.Elasticsearch.ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
     {
         AutoRegisterTemplate = true,

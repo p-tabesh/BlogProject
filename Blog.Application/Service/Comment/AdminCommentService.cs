@@ -19,7 +19,11 @@ public class AdminCommentService : BaseService<AdminCommentService>, IAdminComme
     public IEnumerable<CommentViewModel> GetAllComments()
     {
         var comments = _commentRepository.GetAll();
-        var models = Mapper.Map<List<CommentViewModel>>(comments);
+        List<CommentViewModel> models = new();
+
+        foreach (var comment in comments)
+            models.Add(CommentMapper.MapFromEntity(comment));
+
         return models;
     }
 
@@ -35,5 +39,7 @@ public class AdminCommentService : BaseService<AdminCommentService>, IAdminComme
     {
         var comment = _commentRepository.GetById(commentId);
         comment.Show();
+        _commentRepository.Update(comment);
+        UnitOfWork.Commit();
     }
 }

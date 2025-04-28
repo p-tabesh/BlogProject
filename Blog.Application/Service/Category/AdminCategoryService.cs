@@ -15,7 +15,7 @@ public class AdminCategoryService : BaseService<AdminCategoryService>, IAdminCat
     {
         _categoryRepository = categoryRepository;
     }
-    public int CreateCategory(CreateCategory request)
+    public int CreateCategory(CreateCategoryRequest request)
     {
         var category = Mapper.Map<Domain.Entity.Category>(request);
         _categoryRepository.Add(category);

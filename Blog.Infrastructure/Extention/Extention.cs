@@ -3,7 +3,6 @@ using Core.Repository.Model.Specifications;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Protocols;
 using System.Linq.Expressions;
 
 namespace Blog.Infrastructure.Extention;
@@ -34,6 +33,21 @@ public static class Extention
         {
             return query.Where(specification.Expression);
         }
+        return query;
+    }
+
+    public static IQueryable<T> ApplySkipTake<T>(this IQueryable<T> query, int skip, int take)
+    {
+        if (skip != 0)
+        {
+            query = query.Skip(skip);
+        }
+
+        if (take != 0)
+        {
+            query = query.Take(take);
+        }
+
         return query;
     }
 }

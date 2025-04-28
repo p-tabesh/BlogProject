@@ -23,9 +23,13 @@ public class AccountService : IAccountService
         _redisCache = redisCache;
     }
 
-    public string GetLoginToken(LoginRequest request)
+    public string GetLoginToken(LoginRequest request, bool isAdmin)
     {
         var user = GetUser(request);
+
+        if (isAdmin && !user.IsAdmin)
+            throw new Exception("invlied username or password");
+
         var credentials = GetCredentials();
         var claims = GetClaims(user);
         var token = GenerateToken(claims, credentials);

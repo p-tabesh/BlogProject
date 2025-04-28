@@ -25,30 +25,26 @@ public class ArticleController : BaseController
     }
 
     [HttpGet]
+    [Route("popular")]
+    public IActionResult GetPopularArticles()
+    {
+        var articles = _articleService.GetPopularArticles();
+        return Ok(articles);
+    }
+
+    [HttpGet]
     [Route("recents")]
     public IActionResult GetRecentArticles()
     {
-        return base.Ok();
+        var articles =_articleService.GetRecentArticles();
+        return Ok(articles);
     }
 
     [HttpGet]
     [Route("suggested")]
     public IActionResult GetSuggestedArticles()
     {
-        return Ok();
-    }
 
-    [HttpGet]
-    [Route("trends")]
-    public IActionResult GetTrendArticles()
-    {
-        return Ok();
-    }
-
-    [HttpGet]
-    [Route("trend-tags")]
-    public IActionResult GetTrendTags()
-    {
         return Ok();
     }
 
@@ -56,14 +52,16 @@ public class ArticleController : BaseController
     [Route("search")]
     public IActionResult GetArticleByTextSearch([FromQuery] string search)
     {
-        return Ok();
+        var articles = _articleService.GetByTextSearch(search);
+        return Ok(articles);
     }
 
     [HttpGet]
     [Route("filter")]
-    public IActionResult GetWithFilter([FromQuery] ArticleFilterModel model)
+    public IActionResult GetWithFilter([FromQuery] ArticleFilterModel filterModel)
     {
-        return Ok();
+        var articles = _articleService.GetWithFilter(filterModel);
+        return Ok(articles);
     }
 
     [HttpPost]

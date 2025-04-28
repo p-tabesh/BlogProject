@@ -5,7 +5,7 @@ namespace Blog.Application.Service.Category;
 public interface IAdminCategoryService
 {
     IEnumerable<CategoryViewModel> GetAllCategories();
-    int CreateCategory(CreateCategory request);
+    int CreateCategory(CreateCategoryRequest request);
     void EditCategory(EditCategoryRequest request);
     void DeActiveCategory(int categoryId);
 }

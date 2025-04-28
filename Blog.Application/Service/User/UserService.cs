@@ -51,7 +51,7 @@ public class UserService : BaseService<UserService>, IUserService
 
     public void CreateProfile(CreateProfileRequest request, int userId)
     {
-        var user = _userRepository.GetById(userId);
+        var user = _userRepository.GetWithProfile(userId);
         user.CreateProfile(request.FullName, request.Gender, request.BirthPlace, request.Bio, request.ProfileImageLink);
         _userRepository.Update(user);
         UnitOfWork.Commit();
@@ -59,7 +59,7 @@ public class UserService : BaseService<UserService>, IUserService
 
     public void EditProfile(EditProfileRequest request, int userId)
     {
-        var user = _userRepository.GetById(userId);
+        var user = _userRepository.GetWithProfile(userId);
         user.EditProfile(request.FullName, request.Gender, request.BirthPlace, request.Bio);
         _userRepository.Update(user);
         UnitOfWork.Commit();
@@ -67,7 +67,7 @@ public class UserService : BaseService<UserService>, IUserService
 
     public ProfileViewModel GetUserProfile(int userId)
     {
-        var user = _userRepository.GetById(userId);
+        var user = _userRepository.GetWithProfile(userId);
 
         if (user?.Profile == null)
             throw new Exception("user doesn't have profile");
@@ -86,7 +86,7 @@ public class UserService : BaseService<UserService>, IUserService
         var password = Password.Create(request.Password);
         var email = Email.Create(request.Email);
 
-        var user = new Domain.Entity.User(username, password, email);
+        var user = new Domain.Entity.User(username, password, email,false);
 
         _userRepository.Add(user);
         UnitOfWork.Commit();

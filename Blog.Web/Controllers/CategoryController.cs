@@ -1,5 +1,4 @@
-﻿using Blog.Application.Model.Category;
-using Blog.Application.Service.Category;
+﻿using Blog.Application.Service.Category;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Web.Controllers;

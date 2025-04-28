@@ -12,14 +12,16 @@ public class User : RootEntity<int>
     public DateTime CreationDate { get; private set; }
     public List<int> FavoriteArticleIds { get; private set; } = new();
     public Profile? Profile { get; private set; }
+    public bool IsActive { get; private set; } = true;
 
     private User() { }
 
-    public User(Username username, Password password, Email email)
+    public User(Username username, Password password, Email email, bool isAdmin)
     {
         Username = username;
         Password = password;
         Email = email;
+        IsAdmin = isAdmin;
         CreationDate = DateTime.UtcNow;
     }
 
@@ -71,5 +73,19 @@ public class User : RootEntity<int>
             FavoriteArticleIds.Remove(articleId);
         else
             throw new InvalidOperationException("This article is not in favorites");
+    }
+
+    public void Active()
+    {
+        if (!IsActive)
+            IsActive = true;
+        return;
+    }
+
+    public void DeActive()
+    {
+        if (IsActive)
+            IsActive = false;
+        return;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Blog.Application.Model.Account;
-using Blog.Domain.Entity;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Blog.Application.Service.Account;
@@ -7,6 +6,7 @@ namespace Blog.Application.Service.Account;
 public interface IAccountService
 {
     public bool IsTokenBlackListed(string sid);
-    public string GetLoginToken(LoginRequest request);
-    public void Logout(JwtSecurityToken token);
+    public string GetLoginToken(LoginRequest request, bool isAdmin);
+    public void Logout(JwtSecurityToken token);    
 }
+

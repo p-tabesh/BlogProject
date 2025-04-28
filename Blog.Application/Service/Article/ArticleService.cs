@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Blog.Application.Model.Article;
+using Blog.Domain.Entity;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
 using Blog.Domain.Specifications;
+using Core.Repository.Model.Specifications;
 using Microsoft.Extensions.Logging;
 
 namespace Blog.Application.Service.Article;
@@ -22,7 +25,7 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
 
     public IEnumerable<ArticleViewModel> GetArticles()
     {
-        var articles = _articleRepository.GetWithSpecifications(new PublishedArticleSpecification());
+        var articles = _articleRepository.GetWithSpecification(new PublishedArticleSpecification());
         var models = Mapper.Map<List<ArticleViewModel>>(articles);
         return models;
     }
@@ -39,14 +42,6 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
         if (category == null)
             throw new Exception("category doesn't exists");
 
-        //var article = new Domain.Entity.Article(request.Header,
-        //    request.Title,
-        //    request.Text,
-        //    request.Tags,
-        //    request.PreviewImageLink,
-        //    request.PublishDate,
-        //    requestUserId,
-        //    request.CategoryId);
         var article = Mapper.Map<Domain.Entity.Article>(request, option => option.Items["AuthorUserId"] = requestUserId);
         _articleRepository.Add(article);
         UnitOfWork.Commit();
@@ -89,6 +84,39 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
 
         _articleRepository.Update(article);
         UnitOfWork.Commit();
+    }
+
+    public ArticleViewModel GetRecentArticles()
+    {
+        var articles = _articleRepository.GetWithSpecification(new RecentArticleSpecification());
+        var models = Mapper.Map<ArticleViewModel>(articles);
+
+        return models;
+    }
+
+    public ArticleViewModel GetPopularArticles()
+    {
+        var articles = _articleRepository.GetWithSpecification(new PublishedArticleSpecification()).OrderBy(a => a.Likes);
+        var models = Mapper.Map<ArticleViewModel>(articles);
+
+        return models;
+    }
+
+    public ArticleViewModel GetByTextSearch(string search)
+    {
+        var articles = _articleRepository.GetWithSpecification(new ArticleBySearchTextSpecification(search));
+        var models = Mapper.Map<ArticleViewModel>(articles);
+
+        return models;
+    }
+
+    public ArticleViewModel GetWithFilter(ArticleFilterModel filter)
+    {
+        var specification = GetFilterSpecifications(filter);
+        var articles = _articleRepository.GetWithSpecification(specification);
+        var models = Mapper.Map<ArticleViewModel>(articles);
+
+        return models;
     }
 }
 

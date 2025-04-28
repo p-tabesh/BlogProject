@@ -2,6 +2,7 @@
 using Blog.Domain.IRepository;
 using Blog.Domain.ValueObject;
 using Blog.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Infrastructure.Repository;
 
@@ -9,8 +10,15 @@ namespace Blog.Infrastructure.Repository;
 public class UserRepository : CrudRepository<User>, IUserRepository
 {
     public UserRepository(BlogDbContext dbContext)
-        : base(dbContext, x => x.Profile) { }
+        : base(dbContext) { }
 
+    public User GetWithProfile(int id)
+    {
+        var user = Entities.Include(u=>u.Profile).FirstOrDefault(u =>
+            u.Id==id);
+
+        return user;
+    }
     public User GetByEmailAndPassword(Email email, Password password)
     {
         var user = Entities.FirstOrDefault(u =>
