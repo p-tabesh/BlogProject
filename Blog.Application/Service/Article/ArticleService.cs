@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
-using Azure.Core;
 using Blog.Application.Model.Article;
-using Blog.Domain.Entity;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
 using Blog.Domain.Specifications;
-using Core.Repository.Model.Specifications;
 using Microsoft.Extensions.Logging;
 
 namespace Blog.Application.Service.Article;
@@ -112,7 +109,7 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
 
     public ArticleViewModel GetWithFilter(ArticleFilterModel filter)
     {
-        var specification = GetFilterSpecifications(filter);
+        var specification = SpecificationBuilder.GetFilterSpecifications(filter);
         var articles = _articleRepository.GetWithSpecification(specification);
         var models = Mapper.Map<ArticleViewModel>(articles);
 
