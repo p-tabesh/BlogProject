@@ -80,6 +80,7 @@ public class ArticleController : BaseController
     [Route("{id}")]
     public async Task<IActionResult> GetArticle(int id)
     {
+        Console.WriteLine(HttpContext.Session.Id);
         var article = _articleService.GetArticleById(id);
         await _producer.ProduceAsync(Topic, new Message<string, string> { Key = "Article-Views", Value = $"article id {id} viewd" });
         return Ok(article);
