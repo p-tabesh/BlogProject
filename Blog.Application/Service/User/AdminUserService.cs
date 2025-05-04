@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Blog.Application.Service.User;
 
-public class AdminUserService : BaseService<AdminUserService> IAdminUserService
+public class AdminUserService : BaseService<AdminUserService>, IAdminUserService
 {
     private readonly IUserRepository _userRepository;
     public AdminUserService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<AdminUserService> logger, IUserRepository userRepository)

@@ -16,6 +16,7 @@ public class CrudRepository<TEntity> : ICrudRepository<TEntity> where TEntity : 
     public CrudRepository(BlogDbContext dbContext)
     {
         Entities = dbContext.Set<TEntity>();
+        QueryableEntities = dbContext.Set<TEntity>();
     }
 
     public CrudRepository(BlogDbContext dbContext, params Expression<Func<TEntity, object>>[] includes)
@@ -37,7 +38,7 @@ public class CrudRepository<TEntity> : ICrudRepository<TEntity> where TEntity : 
 
     public TEntity GetById(int id)
     {
-        var entity = QueryableEntities.FirstOrDefault(x => x.Id == id);
+        var entity = Entities.FirstOrDefault(x => x.Id == id);
         return entity;
     }
 

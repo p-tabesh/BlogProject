@@ -3,6 +3,7 @@ using Blog.Application.Service.Article;
 using Blog.Application.Model.Article;
 using Blog.Web.Extention;
 using Microsoft.AspNetCore.Authorization;
+using Confluent.Kafka;
 
 namespace Blog.Web.Controllers;
 
@@ -11,10 +12,13 @@ namespace Blog.Web.Controllers;
 public class ArticleController : BaseController
 {
     private readonly IArticleService _articleService;
+    private readonly IProducer<string, string> _producer;
+    const string Topic = "articleView-event";
 
-    public ArticleController(IArticleService articleService)
+    public ArticleController(IArticleService articleService, IProducer<string, string> producer)
     {
         _articleService = articleService;
+        _producer = producer;
     }
 
     [HttpGet]
@@ -36,7 +40,7 @@ public class ArticleController : BaseController
     [Route("recents")]
     public IActionResult GetRecentArticles()
     {
-        var articles =_articleService.GetRecentArticles();
+        var articles = _articleService.GetRecentArticles();
         return Ok(articles);
     }
 
@@ -74,9 +78,10 @@ public class ArticleController : BaseController
 
     [HttpGet]
     [Route("{id}")]
-    public IActionResult GetArticle(int id)
+    public async Task<IActionResult> GetArticle(int id)
     {
         var article = _articleService.GetArticleById(id);
+        await _producer.ProduceAsync(Topic, new Message<string, string> { Key = "Article-Views", Value = $"article id {id} viewd" });
         return Ok(article);
     }
 

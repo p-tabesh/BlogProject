@@ -8,7 +8,7 @@ using Serilog;
 using Serilog.Exceptions;
 using AutoMapper;
 using Blog.Application.Model.Category;
-
+using Confluent.Kafka;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,6 +53,13 @@ builder.Services.AddAuthorization();
 
 // Swagger Configuration
 builder.Services.AddBlogSwaggerConfiguration();
+
+// Kafka Configuration
+var producerConfig = new ProducerConfig
+{
+    BootstrapServers = "localhost:9092"
+};
+builder.Services.AddSingleton(new ProducerBuilder<string, string>(producerConfig).Build());
 
 // Middleware configuration
 builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
