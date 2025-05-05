@@ -1,37 +1,52 @@
-﻿
-
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
+using KafkaConsumer;
+using KafkaConsumer.EventHandler;
 using StackExchange.Redis;
+using System.Text.Json;
+using static Confluent.Kafka.ConfigPropertyNames;
 
-var consumerConfig = new ConsumerConfig()
+class Program
 {
-    BootstrapServers = "localhost:9092",
-    GroupId = "post-view-counter-group",
-    AutoOffsetReset = AutoOffsetReset.Earliest
-};
-
-var redis = ConnectionMultiplexer.Connect("localhost");
-var db = redis.GetDatabase();
-
-using var consumer = new ConsumerBuilder<string,string>(consumerConfig).Build();
-consumer.Subscribe("articleView-event");
-
-while (true)
-{
-	try
-	{
-		var consumeResult = consumer.Consume();
-		string postId = consumeResult.Message.Key;
-        Console.WriteLine(postId);
-        Console.WriteLine(consumeResult.Message.Value);
-		//db.StringIncrement($"view:{postId}");
-		//foreach (var key in redis.GetServer("localhost",6379).Keys(pattern:"views:*"))
-		//{
-			
-		//}
+    public Program()
+    {
+        Console.WriteLine("test");
     }
-	finally
-	{
+    public static void Main(string[] args)
+    {
+        var consumerConfig = new ConsumerConfig
+        {
+            BootstrapServers = "localhost:9092",
+            GroupId = "blog-event-consumemr",
+            AutoOffsetReset = AutoOffsetReset.Earliest,
+            EnableAutoCommit = true
+        };
+        var consumer = new ConsumerBuilder<string, string>(consumerConfig).Build();
+        var topic = "articleView-event";
+        var cache = new Dictionary<string, (string,DateTime)>();
 
-	}
+        while (true)
+        {
+            try
+            {
+                consumer.Subscribe(topic);
+                var consumeResult = consumer.Consume();
+                //var deserializedData = JsonSerializer.Deserialize<ArticleViewEventModel>(consumeResult.Value);
+                //Console.WriteLine($"deserialized data: {deserializedData}");
+                cache.Add("dict Key", ("dict value", DateTime.Now));
+                Console.WriteLine(cache.Values.First());
+
+            }
+            catch (ConsumeException)
+            {
+
+            }
+        }
+
+
+
+
+
+
+
+    }
 }

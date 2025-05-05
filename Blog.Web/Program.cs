@@ -55,6 +55,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddBlogSwaggerConfiguration();
 
 // Kafka Configuration
+
 var producerConfig = new ProducerConfig
 {
     BootstrapServers = "localhost:9092"

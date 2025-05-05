@@ -3,21 +3,26 @@ using Blog.Application.Model.Article;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
 using Blog.Domain.Specifications;
+using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
+using System.Text.Json;
 
 namespace Blog.Application.Service.Article;
 
 public class ArticleService : BaseService<ArticleService>, IArticleService
 {
     private readonly IArticleRepository _articleRepository;
-    private readonly ICategoryRepository _categoryRepository;
+    private readonly ICategoryRepository _categoryRepository;    
+    private readonly IProducer<string,string>  _producer;
 
     public ArticleService(IUnitOfWork unitOfWork, IArticleRepository articleRepository, ICategoryRepository categoryRepository,
-        IMapper mapper, ILogger<ArticleService> logger)
+        IMapper mapper, ILogger<ArticleService> logger, IProducer<string,string> producer)
         : base(unitOfWork, mapper, logger)
     {
         _categoryRepository = categoryRepository;
         _articleRepository = articleRepository;
+        _producer = producer;
     }
 
     public IEnumerable<ArticleViewModel> GetArticles()
@@ -27,9 +32,12 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
         return models;
     }
 
-    public ArticleViewModel GetArticleById(int id)
+    public async Task<ArticleViewModel> GetArticleById(int id)
     {
         var model = Mapper.Map<ArticleViewModel>(_articleRepository.GetById(id));
+        var serializedData = JsonSerializer.Serialize(new ArticleViewEventModel(id, "123321"));
+        await _producer.ProduceAsync("articleView-event", new Message<string, string> { Key = "Post-View-Event", Value = serializedData });
+
         return model;
     }
 

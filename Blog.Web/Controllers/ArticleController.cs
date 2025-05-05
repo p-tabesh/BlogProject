@@ -12,13 +12,10 @@ namespace Blog.Web.Controllers;
 public class ArticleController : BaseController
 {
     private readonly IArticleService _articleService;
-    private readonly IProducer<string, string> _producer;
-    const string Topic = "articleView-event";
 
-    public ArticleController(IArticleService articleService, IProducer<string, string> producer)
+    public ArticleController(IArticleService articleService)
     {
         _articleService = articleService;
-        _producer = producer;
     }
 
     [HttpGet]
@@ -48,7 +45,7 @@ public class ArticleController : BaseController
     [Route("suggested")]
     public IActionResult GetSuggestedArticles()
     {
-
+        
         return Ok();
     }
 
@@ -80,10 +77,9 @@ public class ArticleController : BaseController
     [Route("{id}")]
     public async Task<IActionResult> GetArticle(int id)
     {
-        Console.WriteLine(HttpContext.Session.Id);
-        var article = _articleService.GetArticleById(id);
-        await _producer.ProduceAsync(Topic, new Message<string, string> { Key = "Article-Views", Value = $"article id {id} viewd" });
-        return Ok(article);
+        
+        var article = await _articleService.GetArticleById(id);
+        return Ok(article); 
     }
 
     [HttpPost]
