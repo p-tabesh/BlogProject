@@ -7,10 +7,6 @@ using static Confluent.Kafka.ConfigPropertyNames;
 
 class Program
 {
-    public Program()
-    {
-        Console.WriteLine("test");
-    }
     public static void Main(string[] args)
     {
         var consumerConfig = new ConsumerConfig

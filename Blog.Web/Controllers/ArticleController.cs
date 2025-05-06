@@ -45,7 +45,7 @@ public class ArticleController : BaseController
     [Route("suggested")]
     public IActionResult GetSuggestedArticles()
     {
-        
+
         return Ok();
     }
 
@@ -77,9 +77,9 @@ public class ArticleController : BaseController
     [Route("{id}")]
     public async Task<IActionResult> GetArticle(int id)
     {
-        
-        var article = await _articleService.GetArticleById(id);
-        return Ok(article); 
+
+        var article = await _articleService.GetArticleById(id, HttpContext.Connection.Id);
+        return Ok(article);
     }
 
     [HttpPost]

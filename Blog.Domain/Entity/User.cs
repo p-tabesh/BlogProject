@@ -12,7 +12,7 @@ public class User : RootEntity<int>
     public DateTime CreationDate { get; private set; }
     public List<int> FavoriteArticleIds { get; private set; } = new();
     public Profile? Profile { get; private set; }
-    public bool IsActive { get; private set; } = true;
+    public bool IsActive { get; private set; }
 
     private User() { }
 
@@ -23,6 +23,7 @@ public class User : RootEntity<int>
         Email = email;
         IsAdmin = isAdmin;
         CreationDate = DateTime.UtcNow;
+        IsActive = true;
     }
 
     public void ChangeUsername(Username username)

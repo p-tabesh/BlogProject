@@ -13,6 +13,7 @@ public class Article : RootEntity<int>
     public Status Status { get; private set; }
     public List<int>? Likes { get; private set; } = new();
     public List<int>? Dislikes { get; private set; } = new();
+    public long Views { get; private set; } = 0;
     public int AuthorUserId { get; private set; }
     public int CategoryId { get; private set; }
     public string PreviewImageLink { get; private set; }
@@ -72,5 +73,10 @@ public class Article : RootEntity<int>
         Title = newTitle;
         Text = newText;
         PreviewImageLink = newPreviewImageLink;
+    }
+
+    public void AddView(int viewCount)
+    {
+        Views += viewCount;
     }
 }

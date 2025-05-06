@@ -9,6 +9,8 @@ using Serilog.Exceptions;
 using AutoMapper;
 using Blog.Application.Model.Category;
 using Confluent.Kafka;
+using StackExchange.Redis;
+using Blog.Application.Service.Article;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,9 +64,35 @@ var producerConfig = new ProducerConfig
 };
 builder.Services.AddSingleton(new ProducerBuilder<string, string>(producerConfig).Build());
 
+
+var consumerConfig = new ConsumerConfig
+{
+    BootstrapServers = "localhost:9092",
+    GroupId = "ArticleView-ConsumerGroup",
+    ClientId = "ArticleView-EventConsumer"
+};
+builder.Services.AddSingleton(new ConsumerBuilder<string, string>(consumerConfig).Build());
+
 // Middleware configuration
 builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 
+// Config Redis
+builder.Services.AddSingleton<ConnectionMultiplexer>(sp =>
+{
+    return ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnectionString"));
+});
+
+
+// Add hosted services
+builder.Services.AddHostedService<ConsumeArticleViewService>(sp =>
+{
+    var consumer = sp.GetRequiredService<IConsumer<string, string>>();
+    var connectionMultiplexer = sp.GetRequiredService<ConnectionMultiplexer>();
+    var topic = "articleView-event";
+    return new ConsumeArticleViewService(consumer, connectionMultiplexer, topic);
+});
+
+builder.Services.AddHostedService<ProcessArticleViewService>();
 
 // Mapper Configuration
 var mapperConfiguration = new MapperConfiguration(cfg =>

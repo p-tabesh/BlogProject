@@ -1,3 +1,3 @@
 ﻿namespace Blog.Application.Model.Article;
 
-public record ArticleViewEventModel(int Id, string ConnectionId);
+public record ArticleViewEventModel(string ConnectionId,int ArticleId, DateTime ViewTime);
