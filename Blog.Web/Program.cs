@@ -11,6 +11,10 @@ using Blog.Application.Model.Category;
 using Confluent.Kafka;
 using StackExchange.Redis;
 using Blog.Application.Service.Article;
+using Blog.Infrastructure.Context;
+using Elastic.CommonSchema;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,10 +31,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add DbContext
-builder.Services.AddBlogDbContext(builder.Configuration);
+//builder.Services.AddBlogDbContext(builder.Configuration);
+builder.Services.AddDbContext<BlogDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnectionString"));
+});
 
 // Config Logger
-Log.Logger = new LoggerConfiguration()
+Serilog.Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .Enrich.WithExceptionDetails()
     .WriteTo.Console()
@@ -131,5 +139,6 @@ app.UseSession();
 app.MapControllers();
 
 app.Run();
+
 
 public partial class Program { }
