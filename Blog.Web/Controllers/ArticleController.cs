@@ -8,7 +8,7 @@ using Confluent.Kafka;
 namespace Blog.Web.Controllers;
 
 [ApiController]
-[Route("api/articles")]
+[Route("/api/articles")]
 public class ArticleController : BaseController
 {
     private readonly IArticleService _articleService;
