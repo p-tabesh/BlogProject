@@ -9,19 +9,18 @@ using AutoMapper;
 using Blog.Application.Model.Category;
 using Confluent.Kafka;
 using StackExchange.Redis;
-using Blog.Application.Service.Article;
-using Blog.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
+using Blog.Infrastructure.Extention;
+using Blog.Application.Service.Article;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-    });
+//builder.Services.AddControllers()
+//    .AddJsonOptions(options =>
+//    {
+//        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+//        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+//    });
 
 builder.Services.AddCors(
     option =>
@@ -35,11 +34,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add DbContext
-// builder.Services.AddBlogDbContext(builder.Configuration);
-builder.Services.AddDbContext<BlogDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnectionString"));
-});
+builder.Services.AddBlogDbContext(builder.Configuration);
+//builder.Services.AddDbContext<BlogDbContext>(options =>
+//{
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnectionString"));
+//});
 
 // Config Logger
 Serilog.Log.Logger = new LoggerConfiguration()
@@ -106,7 +105,7 @@ builder.Services.AddHostedService<ConsumeArticleViewService>(sp =>
 
 builder.Services.AddHostedService<ProcessArticleViewService>();
 
-// Mapper Configuration
+//// Mapper Configuration
 var mapperConfiguration = new MapperConfiguration(cfg =>
 {
     cfg.AddProfile<ArticleProfileMapper>();

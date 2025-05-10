@@ -3,7 +3,6 @@ using Blog.Application.Service.Article;
 using Blog.Application.Model.Article;
 using Blog.Web.Extention;
 using Microsoft.AspNetCore.Authorization;
-using Confluent.Kafka;
 
 namespace Blog.Web.Controllers;
 

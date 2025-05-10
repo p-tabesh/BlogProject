@@ -11,12 +11,16 @@ namespace Blog.Test;
 public class ArticleTest
 {
     private HttpClient _client;
+    private HttpClient _unauthorizedClient;
     private BlogDbContext _db;
+    private TestHelper _helper;
 
     public ArticleTest(TestHelper helper)
     {
-        _client = helper.Client;
+        _client = helper.AuthorizedClient;
         _db = helper.Db;
+        _helper = helper;
+        _unauthorizedClient = helper.UnauthorizedClient;
     }
 
     [Fact]
@@ -38,6 +42,20 @@ public class ArticleTest
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         article.Should().NotBeNull();
         article.Status.Should().Be(Domain.Enum.Status.Draft);
+    }
+
+    [Fact]
+    public async Task CreateArticle_ReturnsUnauthorize()
+    {
+        // Arrange
+        var requestUrl = "/api/articles";
+        var request = new CreateArticleRequest("Test header", "Test title", "Test text", new List<string>(), DateTime.Now, "link test", 1);
+
+        // Act
+        var response = await _unauthorizedClient.PostAsJsonAsync(requestUrl, request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -89,5 +107,37 @@ public class ArticleTest
             CategoryId = newArticle.CategoryId,
             PreviewImageLink = newArticle.PreviewImageLink
         }, options => options.ExcludingMissingMembers());
+    }
+
+
+    [Fact]
+    public async Task LikeArticle_IncreaseArticleLikes()
+    {
+        // Arrange
+        var article = _db.Article.FirstOrDefault();
+        var requestUrl = $"/api/articles/{article.Id}/like";
+
+        // Act
+        await _client.PostAsync(requestUrl, null);
+
+        // Assert
+        var likedArticle = _db.Article.FirstOrDefault(a => a.Id == article.Id);
+        likedArticle.Likes.Count().Should().BeGreaterThan(0);
+        var likedBy = likedArticle.Likes.First(x => x == _helper.ClientUserId).Should().NotBe(null);
+    }
+
+
+
+    [Fact]
+    public async Task LikeArticle_ReturnsUnathorized()
+    {
+        // Arrange
+        var requestUrl = $"/api/articles/0/like";
+
+        // Act
+        var response = await _unauthorizedClient.PostAsync(requestUrl,null);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 }

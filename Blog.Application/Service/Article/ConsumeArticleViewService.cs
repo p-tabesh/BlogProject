@@ -38,8 +38,7 @@ public class ConsumeArticleViewService : BackgroundService
         }
         catch (Exception)
         {
-
-            throw;
+            // Ignore
         }
         finally
         {

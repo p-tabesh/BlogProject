@@ -5,7 +5,6 @@ using Blog.Domain.IUnitOfWork;
 using Blog.Domain.Specifications;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
 using System.Text.Json;
 
 namespace Blog.Application.Service.Article;
@@ -33,8 +32,13 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
     }
 
     public async Task<ArticleViewModel> GetArticleById(int id, string connectionId)
-    {   
-        var model = Mapper.Map<ArticleViewModel>(_articleRepository.GetById(id));
+    {
+        var article = _articleRepository.GetById(id);
+
+        if (article == null || article.Status != Domain.Enum.Status.Published)
+            throw new Exception("article doesn't exists or not released yet.");
+
+        var model = Mapper.Map<ArticleViewModel>(article);
         var serializedData = JsonSerializer.Serialize(new ArticleViewEventModel(connectionId, id, DateTime.Now));
         await _producer.ProduceAsync("articleView-event", new Message<string, string> { Key = "Post-View-Event", Value = serializedData });
 
