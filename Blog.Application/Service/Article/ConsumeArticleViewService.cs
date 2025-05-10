@@ -17,7 +17,6 @@ public class ConsumeArticleViewService : BackgroundService
         _redis = connectionMultiplexer.GetDatabase();
         _consumer = consumer;
         _topic = topic;
-        Console.Write("consumer service");
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -28,13 +27,11 @@ public class ConsumeArticleViewService : BackgroundService
             while (!stoppingToken.IsCancellationRequested)
             {
                 var consumeResult = await Task.Run(() => _consumer.Consume(stoppingToken), stoppingToken);
-                Console.WriteLine("Consumer Key: " + consumeResult.Key);
                 if (consumeResult != null)
                 {
                     var message = JsonSerializer.Deserialize<ArticleViewEventModel>(consumeResult.Value);
                     await _redis.StringSetAsync($"view:{message.ConnectionId}", message.ArticleId.ToString());
                 }
-                Console.WriteLine("loop");
                 await Task.Delay(1000, stoppingToken);
             }
 

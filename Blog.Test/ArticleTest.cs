@@ -1,60 +1,44 @@
 using Blog.Application.Model.Article;
 using Blog.Infrastructure.Context;
-using Elastic.Transport;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
-
+using System.Text.Json;
 
 namespace Blog.Test;
 
-public class ArticleTest : IClassFixture<BlogWebApplicationFactory<Program>>
+[Collection("TestCollection")]
+public class ArticleTest
 {
-    private readonly HttpClient _httpClient;
-    private readonly string _token;
-    private readonly WebApplicationFactory<Program> _factory;
+    private HttpClient _client;
+    private BlogDbContext _db;
 
-    public ArticleTest(BlogWebApplicationFactory<Program> factory)
+    public ArticleTest(TestHelper helper)
     {
-        _factory = factory;
-        _httpClient = factory.CreateClient();
-        //_token = Task.Run(() => new Authenticator(factory).GetTokenAsync()).GetAwaiter().GetResult();
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+        _client = helper.Client;
+        _db = helper.Db;
     }
 
     [Fact]
     public async Task CreateArticle_ReturnsCreated()
     {
-        // Creation
-        int id;
-        {
-            // Arrange
-            var requestUrl = "/api/articles";
-            var request = new CreateArticleRequest("Test header", "Test title", "Test text", new List<string>(),DateTime.Now,"link test",1);
-            
-            // Act
-            var response = await _httpClient.PostAsJsonAsync(requestUrl, request);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            int.TryParse(responseContent, out id);
+        // Arrange
+        var requestUrl = "/api/articles";
+        var request = new CreateArticleRequest("Test header", "Test title", "Test text", new List<string>(), DateTime.Now, "link test", 1);
 
-            // Assert
-            response.EnsureSuccessStatusCode();
-            response.StatusCode.Should().Be(HttpStatusCode.Created);
-        }
+        // Act
+        var response = await _client.PostAsJsonAsync(requestUrl, request);
+        var responseContent = await response.Content.ReadAsStringAsync();
+        int.TryParse(responseContent, out int id);
+        var article = _db.Article.FirstOrDefault(a => a.Id == id);
 
-        // Check if exists in db
-        //{
-        //    using var scope = _factory.Services.CreateScope();
-        //    var db = scope.ServiceProvider.GetRequiredService<BlogDbContext>();
-        //    var article = db.Article.FirstOrDefault(a => a.Id == id);
-        //    article.Should().NotBeNull();
-        //    article.Status.Should().Be(Domain.Enum.Status.Draft);
-        //}
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        article.Should().NotBeNull();
+        article.Status.Should().Be(Domain.Enum.Status.Draft);
     }
-
 
     [Fact]
     public async Task Get_Articles_ReturnListOfArticle()
@@ -63,27 +47,47 @@ public class ArticleTest : IClassFixture<BlogWebApplicationFactory<Program>>
         var requestUrl = "api/articles";
 
         // Act
-        var response = await _httpClient.GetAsync(requestUrl);
+        var response = await _client.GetAsync(requestUrl);
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var articles = JsonSerializer.Deserialize<List<ArticleViewModel>>(responseContent, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
         // Assert
         response.EnsureSuccessStatusCode();
-        var responseContent = await response.Content.ReadAsStringAsync();
         responseContent.Should().NotBeEmpty();
-
-        // Assert
-        using var scope = _factory.Services.CreateScope();
-        scope.ServiceProvider.GetRequiredService<BlogDbContext>();
+        articles.Should().AllBeOfType<ArticleViewModel>();
     }
 
     [Fact]
     public async Task Get_ArticleById_ReturnAnArticle()
     {
-    //    using var scope = _factory.Services.CreateScope();
-    //    var db = scope.ServiceProvider.GetRequiredService<BlogDbContext>();
-    //    var article = db.Article.FirstOrDefault();
+        // Arrange 
+        var newArticle = new Domain.Entity.Article("Test header", "Test title", "Test text", new List<string>(), "link test", DateTime.Now, 1, 1);
+        _db.Article.Add(newArticle);
+        _db.SaveChanges();
+        var requestUrl = $"/api/articles/{newArticle.Id}";
 
-        //var requestUrl = $"/api/articles/{article.Id}";
-        //var response = await _httpClient.GetAsync(requestUrl);
-        //response.EnsureSuccessStatusCode();
+        // Act
+        var response = await _client.GetAsync(requestUrl);
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var id = JsonDocument.Parse(responseContent).RootElement.GetProperty("id").GetInt32();
+        var json = JsonSerializer.Deserialize<ArticleViewModel>(responseContent, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        json.Should().BeEquivalentTo(new
+        {
+            Id = newArticle.Id,
+            Header = newArticle.Header,
+            Title = newArticle.Title,
+            Text = newArticle.Text,
+            Tags = newArticle.Tags,
+            PublishDate = newArticle.PublishDate,
+            status = newArticle.Status,
+            Likes = newArticle.Likes,
+            Dislikes = newArticle.Dislikes,
+            AuthorUserId = newArticle.AuthorUserId,
+            CategoryId = newArticle.CategoryId,
+            PreviewImageLink = newArticle.PreviewImageLink
+        }, options => options.ExcludingMissingMembers());
     }
 }

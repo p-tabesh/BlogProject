@@ -1,12 +1,12 @@
-﻿using FluentAssertions;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Blog.Test;
 
 public class Authenticator
 {
     private static string _username = "pooya";
-    private static string _password = "pooya@987";
+    private static string _password = "admin@987";
     private HttpClient _client;
     public Authenticator(BlogWebApplicationFactory<Program> factory)
     {
@@ -22,9 +22,8 @@ public class Authenticator
         };
 
         var response = await _client.PostAsJsonAsync("/account/login", requestContent);
-        var test = await response.Content.ReadAsStringAsync();
-        test.Should().Contain("salam");
-        //var responseContent = await response.Content.ReadFromJsonAsync<dynamic>();
-        return test;
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var token = JsonDocument.Parse(responseContent).RootElement.GetProperty("token").GetString();
+        return token;
     }
 }

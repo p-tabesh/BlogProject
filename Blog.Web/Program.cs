@@ -1,6 +1,5 @@
 using Blog.Application;
 using Blog.Application.Model.Article;
-using Blog.Infrastructure.Extention;
 using Blog.Web.Middleware;
 using Blog.Web.Extention;
 using Elastic.Serilog.Sinks;
@@ -12,12 +11,17 @@ using Confluent.Kafka;
 using StackExchange.Redis;
 using Blog.Application.Service.Article;
 using Blog.Infrastructure.Context;
-using Elastic.CommonSchema;
-using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
-
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
 
 builder.Services.AddCors(
     option =>
@@ -31,7 +35,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add DbContext
-//builder.Services.AddBlogDbContext(builder.Configuration);
+// builder.Services.AddBlogDbContext(builder.Configuration);
 builder.Services.AddDbContext<BlogDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnectionString"));

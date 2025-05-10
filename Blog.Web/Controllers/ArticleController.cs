@@ -70,7 +70,7 @@ public class ArticleController : BaseController
     public IActionResult CreateArticle(CreateArticleRequest request)
     {
         var id = _articleService.CreateArticle(request, RequestUserId);
-        return CreatedAtAction(nameof(CreateArticle), new { Id = id });
+        return CreatedAtAction(nameof(CreateArticle), id);
     }
 
     [HttpGet]
