@@ -1,6 +1,7 @@
 using Blog.Application.Model.Article;
 using Blog.Infrastructure.Context;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -118,10 +119,11 @@ public class ArticleTest
         var requestUrl = $"/api/articles/{article.Id}/like";
 
         // Act
-        await _client.PostAsync(requestUrl, null);
+        var response = await _client.PostAsync(requestUrl, null);
 
         // Assert
-        var likedArticle = _db.Article.FirstOrDefault(a => a.Id == article.Id);
+        response.EnsureSuccessStatusCode();
+        var likedArticle = await _db.Article.AsNoTracking().FirstOrDefaultAsync(a => a.Id == article.Id);
         likedArticle.Likes.Count().Should().BeGreaterThan(0);
         var likedBy = likedArticle.Likes.First(x => x == _helper.ClientUserId).Should().NotBe(null);
     }
@@ -135,7 +137,7 @@ public class ArticleTest
         var requestUrl = $"/api/articles/0/like";
 
         // Act
-        var response = await _unauthorizedClient.PostAsync(requestUrl,null);
+        var response = await _unauthorizedClient.PostAsync(requestUrl, null);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
