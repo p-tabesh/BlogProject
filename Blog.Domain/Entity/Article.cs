@@ -56,7 +56,7 @@ public class Article : RootEntity<int>
 
     public void Accept()
     {
-        Status = Status.Accepted;
+        Status = Status.Published;
 
         if (PublishDate == null)
             PublishDate = DateTime.UtcNow;

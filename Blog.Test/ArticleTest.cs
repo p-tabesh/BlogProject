@@ -81,6 +81,7 @@ public class ArticleTest
     {
         // Arrange 
         var newArticle = new Domain.Entity.Article("Test header", "Test title", "Test text", new List<string>(), "link test", DateTime.Now, 1, 1);
+        newArticle.Accept();
         _db.Article.Add(newArticle);
         _db.SaveChanges();
         var requestUrl = $"/api/articles/{newArticle.Id}";
