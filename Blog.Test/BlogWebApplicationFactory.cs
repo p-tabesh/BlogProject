@@ -1,5 +1,4 @@
-﻿using Blog.Domain.ValueObject;
-using Blog.Infrastructure.Context;
+﻿using Blog.Infrastructure.Context;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -28,21 +27,7 @@ public class BlogWebApplicationFactory<TStartUp> : WebApplicationFactory<TStartU
                 var scopedServices = scope.ServiceProvider;
                 var db = scopedServices.GetRequiredService<BlogDbContext>();
                 db.Database.EnsureCreated();
-                //SeedData(db);
             }
         });
     }
-
-
-
-    //private void SeedData(BlogDbContext db)
-    //{
-    //    var username = Username.Create("pooya");
-    //    var password = Password.Create("admin@987");
-    //    var email = Email.Create("admin@gmail.com");
-
-    //    db.User.Add(new Domain.Entity.User(username, password, email, false));
-    //    db.Category.Add(new Domain.Entity.Category("Test name", "test description", null));
-    //    db.SaveChanges();
-    //}
 }

@@ -5,6 +5,8 @@ using Blog.Domain.IUnitOfWork;
 using Blog.Domain.Specifications;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Text.Json;
 
 namespace Blog.Application.Service.Article;
@@ -40,6 +42,7 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
 
         var model = Mapper.Map<ArticleViewModel>(article);
         var serializedData = JsonSerializer.Serialize(new ArticleViewEventModel(connectionId, id, DateTime.Now));
+
         await _producer.ProduceAsync("articleView-event", new Message<string, string> { Key = "Post-View-Event", Value = serializedData });
 
         return model;
@@ -95,38 +98,46 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
         UnitOfWork.Commit();
     }
 
-    public ArticleViewModel GetRecentArticles()
+    public IEnumerable<ArticleViewModel> GetRecentArticles()
     {
-        var articles = _articleRepository.GetWithSpecification(new RecentArticleSpecification());
-        var models = Mapper.Map<ArticleViewModel>(articles);
+        var articles = _articleRepository.GetWithSpecification(new RecentArticleSpecification().And(new PublishedArticleSpecification()));
+        var models = Mapper.Map<List<ArticleViewModel>>(articles);
 
         return models;
     }
 
-    public ArticleViewModel GetPopularArticles()
+    public IEnumerable<ArticleViewModel> GetPopularArticles()
     {
-        var articles = _articleRepository.GetWithSpecification(new PublishedArticleSpecification()).OrderBy(a => a.Likes);
-        var models = Mapper.Map<ArticleViewModel>(articles);
+        //var articles = (List<Domain.Entity.Article>)_articleRepository.GetWithSpecification(new PublishedArticleSpecification());
+        //articles.OrderBy(a => a.Likes.Count);
+        var articles = _articleRepository.GetWithSpecification(new PublishedArticleSpecification()).OrderBy(a => a.Likes.Count);
+        var models = Mapper.Map<List<ArticleViewModel>>(articles);
 
         return models;
     }
 
-    public ArticleViewModel GetByTextSearch(string search)
+    public IEnumerable<ArticleViewModel> GetMostViewedArticles()
     {
-        var articles = _articleRepository.GetWithSpecification(new ArticleBySearchTextSpecification(search));
-        var models = Mapper.Map<ArticleViewModel>(articles);
+        var articles = _articleRepository.GetWithSpecification(new PublishedArticleSpecification()).OrderByDescending(a => a.Views);
+        var models = Mapper.Map<List<ArticleViewModel>>(articles);
 
         return models;
     }
 
-    public ArticleViewModel GetWithFilter(ArticleFilterModel filter)
+    public IEnumerable<ArticleViewModel> GetByTextSearch(string search)
+    {
+        var articles = _articleRepository.GetWithSpecification(new ArticleBySearchTextSpecification(search).And(new PublishedArticleSpecification()));
+        var models = Mapper.Map<List<ArticleViewModel>>(articles);
+
+        return models;
+    }
+
+    public IEnumerable<ArticleViewModel> GetWithFilter(ArticleFilterModel filter)
     {
         var specification = SpecificationBuilder.GetFilterSpecifications(filter);
         var articles = _articleRepository.GetWithSpecification(specification);
-        var models = Mapper.Map<ArticleViewModel>(articles);
+        var models = Mapper.Map<List<ArticleViewModel>>(articles);
 
         return models;
     }
 }
-
-

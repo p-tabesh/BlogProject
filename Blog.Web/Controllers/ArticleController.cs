@@ -18,8 +18,11 @@ public class ArticleController : BaseController
     }
 
     [HttpGet]
-    public IActionResult GetArticles()
+    public IActionResult GetArticles([FromQuery] string? search)
     {
+        if (search != null)
+            return Ok(_articleService.GetByTextSearch(search));
+
         var articles = _articleService.GetArticles();
         return Ok(articles);
     }
@@ -44,15 +47,15 @@ public class ArticleController : BaseController
     [Route("suggested")]
     public IActionResult GetSuggestedArticles()
     {
-
+        
         return Ok();
     }
 
     [HttpGet]
-    [Route("search")]
-    public IActionResult GetArticleByTextSearch([FromQuery] string search)
+    [Route("mostViewed")]
+    public IActionResult GetMostViewedArticles()
     {
-        var articles = _articleService.GetByTextSearch(search);
+        var articles = _articleService.GetMostViewedArticles();
         return Ok(articles);
     }
 

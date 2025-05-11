@@ -25,7 +25,7 @@ public class ArticleTest
     }
 
     [Fact]
-    public async Task CreateArticle_ReturnsCreated()
+    public async Task CreateArticle_ReturnsCreated_And_ShouldBeDraft()
     {
         // Arrange
         var requestUrl = "/api/articles";
@@ -143,4 +143,70 @@ public class ArticleTest
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
+
+    [Fact]
+    public async Task DislikeArticle_IncreaseArticleDislikes()
+    {
+        // Arrange
+        var article = _db.Article.FirstOrDefault();
+        var requestUrl = $"/api/articles/{article.Id}/dislike";
+
+        // Act
+        var response = await _client.PostAsync(requestUrl, null);
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        var likedArticle = await _db.Article.AsNoTracking().FirstOrDefaultAsync(a => a.Id == article.Id);
+        likedArticle.Dislikes.Count().Should().BeGreaterThan(0);
+        var likedBy = likedArticle.Dislikes.First(x => x == _helper.ClientUserId).Should().NotBe(null);
+    }
+
+
+
+    [Fact]
+    public async Task DislikeArticle_ReturnsUnathorized()
+    {
+        // Arrange
+        var requestUrl = $"/api/articles/0/dislike";
+
+        // Act
+        var response = await _unauthorizedClient.PostAsync(requestUrl, null);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    public async Task GetArticlesWithFilter_ReturnListOfArticle()
+    {
+        // Arrange 
+        var requestUrl = "api/articles";
+
+        // Act
+        var response = await _client.GetAsync(requestUrl);
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var articles = JsonSerializer.Deserialize<List<ArticleViewModel>>(responseContent, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        responseContent.Should().NotBeEmpty();
+        articles.Should().AllBeOfType<ArticleViewModel>();
+    }
+
+    public async Task GetArticlesWithSearch_ReturnListOfArticle()
+    {
+        // Arrange 
+        var requestUrl = "api/articles";
+        var searchKey = "test";
+
+        // Act
+        var response = await _client.GetAsync(requestUrl);
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var articles = JsonSerializer.Deserialize<List<ArticleViewModel>>(responseContent, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        responseContent.Should().NotBeEmpty();
+        articles.Should().AllBeOfType<ArticleViewModel>();
+    }
+
 }

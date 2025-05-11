@@ -9,6 +9,7 @@ public record ArticleViewModel(int Id,
         string Status,
         List<int>? Likes,
         List<int>? Dislikes,
+        long Views,
         int AuthorUserId,
         int CategoryId,
         string PreviewImageLink);
