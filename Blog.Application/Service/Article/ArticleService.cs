@@ -108,8 +108,6 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
 
     public IEnumerable<ArticleViewModel> GetPopularArticles()
     {
-        //var articles = (List<Domain.Entity.Article>)_articleRepository.GetWithSpecification(new PublishedArticleSpecification());
-        //articles.OrderBy(a => a.Likes.Count);
         var articles = _articleRepository.GetWithSpecification(new PublishedArticleSpecification()).OrderBy(a => a.Likes.Count);
         var models = Mapper.Map<List<ArticleViewModel>>(articles);
 

@@ -2,6 +2,7 @@ using Blog.Application.Model.Article;
 using Blog.Infrastructure.Context;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -111,7 +112,6 @@ public class ArticleTest
         }, options => options.ExcludingMissingMembers());
     }
 
-
     [Fact]
     public async Task LikeArticle_IncreaseArticleLikes()
     {
@@ -128,8 +128,6 @@ public class ArticleTest
         likedArticle.Likes.Count().Should().BeGreaterThan(0);
         var likedBy = likedArticle.Likes.First(x => x == _helper.ClientUserId).Should().NotBe(null);
     }
-
-
 
     [Fact]
     public async Task LikeArticle_ReturnsUnathorized()
@@ -161,8 +159,6 @@ public class ArticleTest
         var likedBy = likedArticle.Dislikes.First(x => x == _helper.ClientUserId).Should().NotBe(null);
     }
 
-
-
     [Fact]
     public async Task DislikeArticle_ReturnsUnathorized()
     {
@@ -176,6 +172,7 @@ public class ArticleTest
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
+    [Fact]
     public async Task GetArticlesWithFilter_ReturnListOfArticle()
     {
         // Arrange 
@@ -192,11 +189,12 @@ public class ArticleTest
         articles.Should().AllBeOfType<ArticleViewModel>();
     }
 
+    [Fact]
     public async Task GetArticlesWithSearch_ReturnListOfArticle()
     {
         // Arrange 
-        var requestUrl = "api/articles";
         var searchKey = "test";
+        var requestUrl = $"api/articles?search={searchKey}";
 
         // Act
         var response = await _client.GetAsync(requestUrl);
@@ -207,6 +205,28 @@ public class ArticleTest
         response.EnsureSuccessStatusCode();
         responseContent.Should().NotBeEmpty();
         articles.Should().AllBeOfType<ArticleViewModel>();
+        foreach (var article in articles)
+            string.Concat(article.Title, ' ', article.Header).Should().Contain(searchKey);
     }
 
+
+    public class ArticleFilterTestData : IEnumerable<object[]>
+    {
+        public IEnumerator<object[]> GetEnumerator()
+        {
+            yield return new object[] { 1,1,new DateTime(2025,02,01),new DateTime(2025,01,01)};
+            yield return new object[] { 1,1,new DateTime(2025,02,01),new DateTime(2025,01,01)};
+            yield return new object[] { 1,1,new DateTime(2025,02,01),new DateTime(2025,01,01)};
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    }
+
+    [Theory]
+    [ClassData(typeof(ArticleFilterTestData))]
+    public async Task GetArticleWithFilter_ReturnListOfArtile_And_MatchWithFilter(int? categoryId, int? authorUserId, DateTime? startDate,DateTime? endDate)
+    {
+
+    }
 }
