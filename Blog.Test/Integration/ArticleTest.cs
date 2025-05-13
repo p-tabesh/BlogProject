@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Web;
 
-namespace Blog.Test;
+namespace Blog.Test.Integration;
 
 [Collection("TestCollection")]
 public class ArticleTest
@@ -99,18 +99,18 @@ public class ArticleTest
         response.EnsureSuccessStatusCode();
         json.Should().BeEquivalentTo(new
         {
-            Id = newArticle.Id,
-            Header = newArticle.Header,
-            Title = newArticle.Title,
-            Text = newArticle.Text,
-            Tags = newArticle.Tags,
-            PublishDate = newArticle.PublishDate,
+            newArticle.Id,
+            newArticle.Header,
+            newArticle.Title,
+            newArticle.Text,
+            newArticle.Tags,
+            newArticle.PublishDate,
             status = newArticle.Status,
-            Likes = newArticle.Likes,
-            Dislikes = newArticle.Dislikes,
-            AuthorUserId = newArticle.AuthorUserId,
-            CategoryId = newArticle.CategoryId,
-            PreviewImageLink = newArticle.PreviewImageLink
+            newArticle.Likes,
+            newArticle.Dislikes,
+            newArticle.AuthorUserId,
+            newArticle.CategoryId,
+            newArticle.PreviewImageLink
         }, options => options.ExcludingMissingMembers());
     }
 
