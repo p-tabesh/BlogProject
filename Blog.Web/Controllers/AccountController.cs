@@ -8,7 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 namespace Blog.Web.Controllers;
 
 [ApiController]
-[Route("account")]
+[Route("[controller]")]
 public class AccountController : BaseController
 {
     private readonly IAccountService _accountService;

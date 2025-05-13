@@ -3,6 +3,8 @@ using Blog.Application.Service.Article;
 using Blog.Application.Model.Article;
 using Blog.Web.Extention;
 using Microsoft.AspNetCore.Authorization;
+using Blog.Web.Refit;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Blog.Web.Controllers;
 
@@ -11,10 +13,12 @@ namespace Blog.Web.Controllers;
 public class ArticleController : BaseController
 {
     private readonly IArticleService _articleService;
+    private readonly IRefitServiceTest _refitClient;
 
-    public ArticleController(IArticleService articleService)
+    public ArticleController(IArticleService articleService, IRefitServiceTest refitClient)
     {
         _articleService = articleService;
+        _refitClient = refitClient;
     }
 
     [HttpGet]
@@ -45,10 +49,10 @@ public class ArticleController : BaseController
 
     [HttpGet]
     [Route("suggested")]
-    public IActionResult GetSuggestedArticles()
+    public async Task<IActionResult> GetSuggestedArticles()
     {
-        
-        return Ok();
+        var test = await _refitClient.GetTest();
+        return Ok(test);
     }
 
     [HttpGet]

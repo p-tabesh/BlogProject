@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
+using System.Web;
 
 namespace Blog.Test;
 
@@ -214,9 +216,9 @@ public class ArticleTest
     {
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[] { 1,1,new DateTime(2025,02,01),new DateTime(2025,01,01)};
-            yield return new object[] { 1,1,new DateTime(2025,02,01),new DateTime(2025,01,01)};
-            yield return new object[] { 1,1,new DateTime(2025,02,01),new DateTime(2025,01,01)};
+            yield return new object[] { 1, 1, new DateTime(2025, 02, 01), new DateTime(2025, 01, 01) };
+            yield return new object[] { 1, 1, new DateTime(2025, 02, 01), new DateTime(2025, 01, 01) };
+            yield return new object[] { 1, 1, new DateTime(2025, 02, 01), new DateTime(2025, 01, 01) };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -225,8 +227,8 @@ public class ArticleTest
 
     [Theory]
     [ClassData(typeof(ArticleFilterTestData))]
-    public async Task GetArticleWithFilter_ReturnListOfArtile_And_MatchWithFilter(int? categoryId, int? authorUserId, DateTime? startDate,DateTime? endDate)
+    public async Task GetArticleWithFilter_ReturnListOfArtile_And_MatchWithFilter(int? categoryId, int? authorUserId, DateTime? startDate, DateTime? endDate)
     {
-
+        var requestUrl = $"api/articles/filter?CategoryId={categoryId}";
     }
 }

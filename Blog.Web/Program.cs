@@ -12,15 +12,10 @@ using StackExchange.Redis;
 using Microsoft.EntityFrameworkCore;
 using Blog.Infrastructure.Extention;
 using Blog.Application.Service.Article;
+using Refit;
+using Blog.Web.Refit;
 
 var builder = WebApplication.CreateBuilder(args);
-
-//builder.Services.AddControllers()
-//    .AddJsonOptions(options =>
-//    {
-//        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-//        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-//    });
 
 builder.Services.AddCors(
     option =>
@@ -35,10 +30,6 @@ builder.Services.AddSwaggerGen();
 
 // Add DbContext
 builder.Services.AddBlogDbContext(builder.Configuration);
-//builder.Services.AddDbContext<BlogDbContext>(options =>
-//{
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnectionString"));
-//});
 
 // Config Logger
 Serilog.Log.Logger = new LoggerConfiguration()
@@ -76,12 +67,17 @@ var producerConfig = new ProducerConfig
 builder.Services.AddSingleton(new ProducerBuilder<string, string>(producerConfig).Build());
 
 
+builder.Services
+    .AddRefitClient<IRefitServiceTest>()
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("http://localhost:5000"));
+
 var consumerConfig = new ConsumerConfig
 {
     BootstrapServers = "localhost:9092",
     GroupId = "ArticleView-ConsumerGroup",
     ClientId = "ArticleView-EventConsumer"
 };
+
 builder.Services.AddSingleton(new ConsumerBuilder<string, string>(consumerConfig).Build());
 
 // Middleware configuration
