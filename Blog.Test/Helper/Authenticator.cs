@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace Blog.Test;
+namespace Blog.Test.Helper;
 
 public class Authenticator
 {

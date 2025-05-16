@@ -5,7 +5,7 @@ namespace Blog.Application.Service.Article;
 public interface IArticleService
 {
     public IEnumerable<ArticleViewModel> GetArticles();
-    public Task<ArticleViewModel> GetArticleById(int id, string connectionId);
+    public Task<ArticleViewModel> GetById(int id, string connectionId);
     public int CreateArticle(CreateArticleRequest request, int requestUserId);
     public void EditArticle(UpdateArticleRequest request, int requestUserId);
     public void LikeArticle(int articleId, int requestUserId);

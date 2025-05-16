@@ -1,13 +1,12 @@
 using Blog.Application.Model.Article;
 using Blog.Infrastructure.Context;
+using Blog.Test.Helper;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Net;
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
-using System.Web;
 
 namespace Blog.Test.Integration;
 
