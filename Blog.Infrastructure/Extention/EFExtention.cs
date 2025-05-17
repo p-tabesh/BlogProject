@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Blog.Infrastructure.Extention;
 
-public static class Extention
+public static class EFExtention
 {
     public static void AddBlogDbContext(this IServiceCollection services, IConfiguration configuration)
     {
