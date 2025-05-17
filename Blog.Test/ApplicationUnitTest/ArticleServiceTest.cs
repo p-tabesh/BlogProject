@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using Blog.Application.Service.Article;
-using Blog.Domain.Entity;
+using Blog.Domain.Event;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
-using Confluent.Kafka;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -18,7 +17,7 @@ public class ArticleServiceTest
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Mock<IMapper> _mapperMock;
     private readonly Mock<ILogger<ArticleService>> _loggerMock;
-    private readonly Mock<IProducer<string, string>> _producerMock;
+    private readonly Mock<IEventProducer> _producerMock;
 
     public ArticleServiceTest()
     {
@@ -27,7 +26,7 @@ public class ArticleServiceTest
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         _mapperMock = new Mock<IMapper>();
         _loggerMock = new Mock<ILogger<ArticleService>>();
-        _producerMock = new Mock<IProducer<string, string>>();
+        _producerMock = new Mock<IEventProducer>();
 
         _articleService = new ArticleService(
             _unitOfWorkMock.Object,
@@ -37,24 +36,6 @@ public class ArticleServiceTest
             _loggerMock.Object,
             _producerMock.Object);
     }
-
-    //[Fact]
-    //public async Task GetById_ShouldReturnArticle()
-    //{
-    //    // Arrange
-    //    var articleId = 10;
-    //    var connectionId = "ConnectionId";
-    //    var article = new Domain.Entity.Article("Test header", "Test title", "", new List<string>(), "", DateTime.Now, 1, 1);
-    //    article.Accept();
-    //    _articleRepositoryMock.Setup(x => x.GetById(It.IsAny<int>())).Returns(article);
-
-    //    // Act
-    //    var returnedArticle =  await _articleService.GetById(articleId,connectionId);
-        
-
-    //    // Assert
-    //    Assert.Equal(article.Title, returnedArticle.Title);
-    //}
 
     [Fact]
     public void LikeArticle_ShouldIncreaseLikes()
@@ -68,5 +49,49 @@ public class ArticleServiceTest
 
         // Assert
         article.Likes.Count.Should().Be(1);
+    }
+
+    [Fact]
+    public void LikeArticleTwice_ShouldLikesBeInEffective()
+    {
+        // Arrange
+        var article = new Domain.Entity.Article("Test header", "Test title", "", new List<string>(), "", DateTime.Now, 1, 1);
+        _articleRepositoryMock.Setup(x => x.GetById(It.IsAny<int>())).Returns(article);
+
+        // Act
+        _articleService.LikeArticle(10, 1);
+        _articleService.LikeArticle(10, 1);
+
+        // Assert
+        article.Likes.Count.Should().Be(0);
+    }
+
+    [Fact]
+    public void DislikeArticle_ShouldIncreaseLikes()
+    {
+        // Arrange
+        var article = new Domain.Entity.Article("Test header", "Test title", "", new List<string>(), "", DateTime.Now, 1, 1);
+        _articleRepositoryMock.Setup(x => x.GetById(It.IsAny<int>())).Returns(article);
+
+        // Act
+        _articleService.DislikeArticle(10, 1);        
+
+        // Assert
+        article.Likes.Count.Should().Be(0);
+    }
+
+    [Fact]
+    public void DislikeArticleTwice_ShouldLikesBeInEffective()
+    {
+        // Arrange
+        var article = new Domain.Entity.Article("Test header", "Test title", "", new List<string>(), "", DateTime.Now, 1, 1);
+        _articleRepositoryMock.Setup(x => x.GetById(It.IsAny<int>())).Returns(article);
+
+        // Act
+        _articleService.DislikeArticle(10, 1);
+        _articleService.DislikeArticle(10, 1);
+
+        // Assert
+        article.Dislikes.Count.Should().Be(0);
     }
 }

@@ -57,4 +57,10 @@ public class CrudRepository<TEntity> : ICrudRepository<TEntity> where TEntity : 
         var entities = Entities.Where(specification).ToList();
         return entities;
     }
+
+    public async Task<TEntity> GetByIdAsync(int id)
+    {
+        var entity = await Entities.FindAsync(id);
+        return entity;
+    }
 }
