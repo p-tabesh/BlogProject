@@ -8,6 +8,7 @@ public interface ICrudRepository<TEntity> where TEntity : class
     void Update(TEntity entity);
     void Remove(TEntity entity);
     TEntity GetById(int id);
+    Task<TEntity> GetByIdAsync(int id);
     IEnumerable<TEntity> GetAll();
     IEnumerable<TEntity> GetWithSpecification(Specification<TEntity> specification);
 }

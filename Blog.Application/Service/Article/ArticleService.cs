@@ -22,7 +22,7 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
         _articleRepository = articleRepository;
         _producer = producer;
     }
-    
+
     public IEnumerable<ArticleViewModel> GetArticles()
     {
         var articles = _articleRepository.GetWithSpecification(new PublishedArticleSpecification());
@@ -32,7 +32,7 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
 
     public async Task<ArticleViewModel> GetById(int id, string connectionId)
     {
-        var article = _articleRepository.GetById(id);
+        var article = await _articleRepository.GetByIdAsync(id);
 
         if (article == null || article.Status != Domain.Enum.Status.Published)
             throw new Exception("article doesn't exists or not released yet.");
@@ -42,14 +42,6 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
         var model = Mapper.Map<ArticleViewModel>(article);
         return model;
     }
-
-    public IEnumerable<ArticleViewModel> GetArticles()
-    {
-        var articles = _articleRepository.GetWithSpecification(new PublishedArticleSpecification());
-        var models = Mapper.Map<List<ArticleViewModel>>(articles);
-        return models;
-    }
-
 
     public int CreateArticle(CreateArticleRequest request, int requestUserId)
     {
