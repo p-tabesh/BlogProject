@@ -22,8 +22,15 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
         _articleRepository = articleRepository;
         _producer = producer;
     }
+    
+    public IEnumerable<ArticleViewModel> GetArticles()
+    {
+        var articles = _articleRepository.GetWithSpecification(new PublishedArticleSpecification());
+        var models = Mapper.Map<List<ArticleViewModel>>(articles);
+        return models;
+    }
 
-    public async Task<ArticleViewModel> GetArticleById(int id, string connectionId)
+    public async Task<ArticleViewModel> GetById(int id, string connectionId)
     {
         var article = _articleRepository.GetById(id);
 

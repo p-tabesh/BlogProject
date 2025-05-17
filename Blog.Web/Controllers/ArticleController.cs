@@ -83,7 +83,7 @@ public class ArticleController : BaseController
     [Route("{id}")]
     public async Task<IActionResult> GetArticle(int id)
     {
-        var article = await _articleService.GetArticleById(id, HttpContext.Connection.Id);
+        var article = await _articleService.GetById(id, HttpContext.Connection.Id);
         return Ok(article);
     }
 

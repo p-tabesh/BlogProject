@@ -3,7 +3,7 @@ using Blog.Infrastructure.Context;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Headers;
 
-namespace Blog.Test;
+namespace Blog.Test.Helper;
 
 
 public class TestHelper : IDisposable
