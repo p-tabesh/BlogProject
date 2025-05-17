@@ -24,17 +24,18 @@ public class ConsumeArticleViewService : BackgroundService
         try
         {
             _consumer.Subscribe(_topic);
+
             while (!stoppingToken.IsCancellationRequested)
             {
-                var consumeResult = await Task.Run(() => _consumer.Consume(stoppingToken), stoppingToken);
+                Console.Write("salam");
+                var consumeResult = await Task.Run(() => _consumer.Consume(stoppingToken));
+
                 if (consumeResult != null)
                 {
                     var message = JsonSerializer.Deserialize<ArticleViewEventModel>(consumeResult.Value);
                     await _redis.StringSetAsync($"view:{message.ConnectionId}", message.ArticleId.ToString());
                 }
-                await Task.Delay(1000, stoppingToken);
             }
-
         }
         catch (Exception)
         {
@@ -44,6 +45,5 @@ public class ConsumeArticleViewService : BackgroundService
         {
             _consumer.Close();
         }
-
     }
 }

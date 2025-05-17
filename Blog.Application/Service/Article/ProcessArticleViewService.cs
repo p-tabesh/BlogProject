@@ -17,14 +17,12 @@ public class ProcessArticleViewService : BackgroundService
         _redis = connectionMultiplexer.GetDatabase();
         _server = connectionMultiplexer.GetServer(connectionMultiplexer.GetEndPoints().First());
         _scopeFactory = factory;
-        Console.WriteLine("processor");
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             var articleList = new List<int>();
 
             using (var scope = _scopeFactory.CreateScope())
@@ -40,7 +38,6 @@ public class ProcessArticleViewService : BackgroundService
                     continue;
 
                 var groupedArticle = articleList.GroupBy(x => x).Select(g => new { Id = g.Key, Count = g.Count() });
-
                 var repo = scope.ServiceProvider.GetRequiredService<IArticleRepository>();
                 var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
@@ -51,10 +48,11 @@ public class ProcessArticleViewService : BackgroundService
             }
 
             var keys = _server.Keys(pattern: "view:*");
+
             foreach (var key in keys)
-            {
                 await _redis.KeyDeleteAsync(key);
-            }            
+
+            await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
         }
     }
 }

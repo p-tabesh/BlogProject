@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using Blog.Application.Model.Article;
+using Blog.Domain.Event;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
 using Blog.Domain.Specifications;
-using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Text.Json;
 
 namespace Blog.Application.Service.Article;
 
@@ -15,17 +12,17 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
 {
     private readonly IArticleRepository _articleRepository;
     private readonly ICategoryRepository _categoryRepository;
-    private readonly IProducer<string, string> _producer;
+    private readonly IEventProducer _producer;
 
     public ArticleService(IUnitOfWork unitOfWork, IArticleRepository articleRepository, ICategoryRepository categoryRepository,
-        IMapper mapper, ILogger<ArticleService> logger, IProducer<string, string> producer)
+        IMapper mapper, ILogger<ArticleService> logger, IEventProducer producer)
         : base(unitOfWork, mapper, logger)
     {
         _categoryRepository = categoryRepository;
         _articleRepository = articleRepository;
         _producer = producer;
     }
-
+    
     public IEnumerable<ArticleViewModel> GetArticles()
     {
         var articles = _articleRepository.GetWithSpecification(new PublishedArticleSpecification());
@@ -40,13 +37,19 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
         if (article == null || article.Status != Domain.Enum.Status.Published)
             throw new Exception("article doesn't exists or not released yet.");
 
+        await _producer.ProduceAsync("articleView-event", new ArticleViewEventModel(connectionId, id, DateTime.Now));
+
         var model = Mapper.Map<ArticleViewModel>(article);
-        var serializedData = JsonSerializer.Serialize(new ArticleViewEventModel(connectionId, id, DateTime.Now));
-
-        await _producer.ProduceAsync("articleView-event", new Message<string, string> { Key = "Post-View-Event", Value = serializedData });
-
         return model;
     }
+
+    public IEnumerable<ArticleViewModel> GetArticles()
+    {
+        var articles = _articleRepository.GetWithSpecification(new PublishedArticleSpecification());
+        var models = Mapper.Map<List<ArticleViewModel>>(articles);
+        return models;
+    }
+
 
     public int CreateArticle(CreateArticleRequest request, int requestUserId)
     {

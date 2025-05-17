@@ -14,6 +14,8 @@ using Blog.Infrastructure.Extention;
 using Blog.Application.Service.Article;
 using Refit;
 using Blog.Web.Refit;
+using Blog.Domain.Event;
+using Blog.Infrastructure.Kafka;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,25 +53,19 @@ builder.Services.AddUnitOfWork();
 
 builder.Services.AddScoped<AI>();
 
+
 // Authentication
 builder.Services.AddBlogAuthentication(builder.Configuration);
 builder.Services.AddAuthorization();
 
+
 // Swagger Configuration
 builder.Services.AddBlogSwaggerConfiguration();
 
+
 // Kafka Configuration
-
-var producerConfig = new ProducerConfig
-{
-    BootstrapServers = "localhost:9092"
-};
-builder.Services.AddSingleton(new ProducerBuilder<string, string>(producerConfig).Build());
-
-
-builder.Services
-    .AddRefitClient<IRefitServiceTest>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri("http://localhost:5000"));
+builder.Services.Configure<ProducerConfig>(builder.Configuration.GetSection("Kafka:Producer"));
+builder.Services.AddScoped<IEventProducer, KafkaEventProducer>();
 
 var consumerConfig = new ConsumerConfig
 {
@@ -84,10 +80,15 @@ builder.Services.AddSingleton(new ConsumerBuilder<string, string>(consumerConfig
 builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 
 // Config Redis
-builder.Services.AddSingleton<ConnectionMultiplexer>(sp =>
+builder.Services.AddSingleton(sp =>
 {
     return ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnectionString"));
 });
+
+// Refit Config
+builder.Services
+    .AddRefitClient<IRefitServiceTest>()
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("http://localhost:5000"));
 
 
 // Add hosted services
