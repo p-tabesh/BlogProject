@@ -11,9 +11,9 @@ public class Category : RootEntity<int>
 
     private Category() { }
 
-    public Category(string name, string description, int? parentCategoryId)
+    public Category(string title, string description, int? parentCategoryId)
     {
-        Title = string.IsNullOrEmpty(name) ? throw new ArgumentException("Invalid input") : name;
+        Title = string.IsNullOrEmpty(title) ? throw new ArgumentException("Invalid input") : title;
         Description = string.IsNullOrEmpty(description) ? throw new ArgumentException("Invalid input") : description;
         ParentCategoryId = parentCategoryId;
     }

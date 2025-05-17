@@ -42,13 +42,13 @@ public class Comment : RootEntity<int>
 
     public void Show()
     {
-        if (IsShow == false)
+        if (IsShow == true)
             return;
 
         this.IsShow = true;
     }
 
-    public void Reject()
+    public void Hide()
     {
         if (IsShow == false)
             return;
