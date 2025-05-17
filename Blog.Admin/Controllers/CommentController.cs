@@ -33,7 +33,7 @@ public class CommentController : Controller
     [Route("{id}/reject")]
     public IActionResult RejectComment(int id)
     {
-        _adminCommentService.RejectComment(id);
+        _adminCommentService.HideComment(id);
         return Ok();
     }
 }

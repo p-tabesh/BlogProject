@@ -27,10 +27,10 @@ public class AdminCommentService : BaseService<AdminCommentService>, IAdminComme
         return models;
     }
 
-    public void RejectComment(int commentId)
+    public void HideComment(int commentId)
     {
         var comment = _commentRepository.GetById(commentId);
-        comment.Reject();
+        comment.Hide();
         _commentRepository.Update(comment);
         UnitOfWork.Commit();
     }

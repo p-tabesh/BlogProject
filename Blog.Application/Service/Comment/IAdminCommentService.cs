@@ -6,5 +6,5 @@ public interface IAdminCommentService
 {
     IEnumerable<CommentViewModel> GetAllComments();
     void ShowComment(int commentId);
-    void RejectComment(int commentId);
+    void HideComment(int commentId);
 }
