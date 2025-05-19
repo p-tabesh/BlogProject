@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
+using Blog.Application.Model.Article;
 using Blog.Application.Service.Article;
 using Blog.Domain.Event;
 using Blog.Domain.IRepository;
 using Blog.Domain.IUnitOfWork;
-using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Moq;
 
 namespace Blog.Test.ApplicationUnitTest;
 
@@ -42,7 +41,23 @@ public class ArticleServiceTest
     {
         // Arrange
         var article = new Domain.Entity.Article("Test header", "Test title", "", new List<string>(), "", DateTime.Now, 1, 1);
+
         _articleRepositoryMock.Setup(x => x.GetById(It.IsAny<int>())).Returns(article);
+        _mapperMock.Setup(x => x.Map<ArticleViewModel>(article))
+            .Returns(new ArticleViewModel(
+                article.Id,
+                article.Header,
+                article.Title,
+                article.Text,
+                article.Tags,
+                article.PublishDate,
+                article.Status.ToString(),
+                article.Likes,
+                article.Dislikes,
+                article.Views,
+                article.AuthorUserId,
+                article.CategoryId,
+                article.PreviewImageLink));
 
         // Act
         _articleService.LikeArticle(10,1);
@@ -57,6 +72,21 @@ public class ArticleServiceTest
         // Arrange
         var article = new Domain.Entity.Article("Test header", "Test title", "", new List<string>(), "", DateTime.Now, 1, 1);
         _articleRepositoryMock.Setup(x => x.GetById(It.IsAny<int>())).Returns(article);
+        _mapperMock.Setup(x => x.Map<ArticleViewModel>(article))
+            .Returns(new ArticleViewModel(
+                article.Id,
+                article.Header,
+                article.Title,
+                article.Text,
+                article.Tags,
+                article.PublishDate,
+                article.Status.ToString(),
+                article.Likes,
+                article.Dislikes,
+                article.Views,
+                article.AuthorUserId,
+                article.CategoryId,
+                article.PreviewImageLink));
 
         // Act
         _articleService.LikeArticle(10, 1);
@@ -67,17 +97,32 @@ public class ArticleServiceTest
     }
 
     [Fact]
-    public void DislikeArticle_ShouldIncreaseLikes()
+    public void DislikeArticle_ShouldIncreaseDisikes()
     {
         // Arrange
         var article = new Domain.Entity.Article("Test header", "Test title", "", new List<string>(), "", DateTime.Now, 1, 1);
         _articleRepositoryMock.Setup(x => x.GetById(It.IsAny<int>())).Returns(article);
+        _mapperMock.Setup(x => x.Map<ArticleViewModel>(article))
+            .Returns(new ArticleViewModel(
+                article.Id,
+                article.Header,
+                article.Title,
+                article.Text,
+                article.Tags,
+                article.PublishDate,
+                article.Status.ToString(),
+                article.Likes,
+                article.Dislikes,
+                article.Views,
+                article.AuthorUserId,
+                article.CategoryId,
+                article.PreviewImageLink));
 
         // Act
         _articleService.DislikeArticle(10, 1);        
 
         // Assert
-        article.Likes.Count.Should().Be(0);
+        article.Dislikes.Count.Should().Be(1);
     }
 
     [Fact]
@@ -86,6 +131,21 @@ public class ArticleServiceTest
         // Arrange
         var article = new Domain.Entity.Article("Test header", "Test title", "", new List<string>(), "", DateTime.Now, 1, 1);
         _articleRepositoryMock.Setup(x => x.GetById(It.IsAny<int>())).Returns(article);
+        _mapperMock.Setup(x => x.Map<ArticleViewModel>(article))
+            .Returns(new ArticleViewModel(
+                article.Id,
+                article.Header,
+                article.Title,
+                article.Text,
+                article.Tags,
+                article.PublishDate,
+                article.Status.ToString(),
+                article.Likes,
+                article.Dislikes,
+                article.Views,
+                article.AuthorUserId,
+                article.CategoryId,
+                article.PreviewImageLink));
 
         // Act
         _articleService.DislikeArticle(10, 1);

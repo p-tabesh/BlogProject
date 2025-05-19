@@ -92,15 +92,15 @@ builder.Services
 
 
 // Add hosted services
-builder.Services.AddHostedService<ConsumeArticleViewService>(sp =>
-{
-    var consumer = sp.GetRequiredService<IConsumer<string, string>>();
-    var connectionMultiplexer = sp.GetRequiredService<ConnectionMultiplexer>();
-    var topic = "articleView-event";
-    return new ConsumeArticleViewService(consumer, connectionMultiplexer, topic);
-});
+//builder.Services.AddHostedService<ConsumeArticleViewService>(sp =>
+//{
+//    var consumer = sp.GetRequiredService<IConsumer<string, string>>();
+//    var connectionMultiplexer = sp.GetRequiredService<ConnectionMultiplexer>();
+//    var topic = "articleView-event";
+//    return new ConsumeArticleViewService(consumer, connectionMultiplexer, topic);
+//});
 
-builder.Services.AddHostedService<ProcessArticleViewService>();
+//builder.Services.AddHostedService<ProcessArticleViewService>();
 
 //// Mapper Configuration
 var mapperConfiguration = new MapperConfiguration(cfg =>

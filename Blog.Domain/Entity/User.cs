@@ -33,7 +33,7 @@ public class User : RootEntity<int>
 
     public void ChangePassword(Password oldPassword, Password newPassword)
     {
-        if (Password != oldPassword)
+        if (Password.Value != oldPassword.Value)
             throw new Exception("old password doesn't match");
 
         Password = newPassword;

@@ -24,6 +24,7 @@ public class UserService : BaseService<UserService>, IUserService
         var newPassword = Password.Create(request.NewPassword);
 
         user.ChangePassword(oldPassword, newPassword);
+
         _userRepository.Update(user);
         UnitOfWork.Commit();
     }
