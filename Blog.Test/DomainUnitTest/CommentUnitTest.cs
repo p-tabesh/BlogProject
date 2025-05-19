@@ -58,6 +58,7 @@ public class CommentUnitTest
         var text = "comment test";
         var comment = new Comment(text, null, 1, 1);
         var likerId = 5;
+
         // Act
         comment.Like(likerId);
 
@@ -73,9 +74,11 @@ public class CommentUnitTest
         var text = "comment test";
         var comment = new Comment(text, null, 1, 1);
         var likerId = 5;
+
         // Act
         comment.Like(likerId);
         comment.Like(likerId);
+
         // Assert
         Assert.Equal(0, comment.Likes.Count);
     }
@@ -87,6 +90,7 @@ public class CommentUnitTest
         var text = "comment test";
         var comment = new Comment(text, null, 1, 1);
         var likerId = 5;
+
         // Act
         comment.Dislike(likerId);
 
@@ -102,9 +106,11 @@ public class CommentUnitTest
         var text = "comment test";
         var comment = new Comment(text, null, 1, 1);
         var likerId = 5;
+
         // Act
         comment.Dislike(likerId);
         comment.Dislike(likerId);
+
         // Assert
         Assert.Equal(0, comment.Dislikes.Count);
     }
