@@ -1,8 +1,5 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using Blog.Application.Model.User;
-using Blog.Application.Service.Article;
 using Blog.Application.Service.User;
 using Blog.Domain.Entity;
 using Blog.Domain.IRepository;

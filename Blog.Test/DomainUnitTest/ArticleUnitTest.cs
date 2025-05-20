@@ -1,5 +1,4 @@
 ﻿using Blog.Domain.Entity;
-using FluentAssertions;
 
 namespace Blog.Test.Unit;
 
