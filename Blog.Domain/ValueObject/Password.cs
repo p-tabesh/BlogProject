@@ -3,10 +3,8 @@ using System.Text;
 
 namespace Blog.Domain.ValueObject;
 
-public class Password
+public class Password : BaseValueObject<string>
 {
-    public string Value { get; private set; }
-
     private Password() { }
 
     private Password(string password)

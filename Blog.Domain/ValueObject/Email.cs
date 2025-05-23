@@ -1,11 +1,10 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Blog.Domain.ValueObject;
 
-public class Email
+public class Email : BaseValueObject<string>
 {
-    public string Value { get; private set; }
-
     private Email() { }
 
     private Email(string emailAddress)
@@ -13,7 +12,7 @@ public class Email
         if (!IsValidEmail(emailAddress))
             throw new Exception("Invalid email format.");
 
-        Value =  emailAddress;
+        Value = emailAddress;
     }
 
     public static Email Create(string emailAddress)
