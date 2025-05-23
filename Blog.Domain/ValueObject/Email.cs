@@ -1,9 +1,8 @@
-﻿using System.Globalization;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Blog.Domain.ValueObject;
 
-public class Email : BaseValueObject<string>
+public class Email : BaseValueObject
 {
     private Email() { }
 

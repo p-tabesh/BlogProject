@@ -1,6 +1,6 @@
 ﻿namespace Blog.Domain.ValueObject;
 
-public class Username : BaseValueObject<string>
+public class Username : BaseValueObject
 {
     private Username() { }
 

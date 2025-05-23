@@ -47,7 +47,7 @@ public class UserServiceTest
         _userService.ChangePassword(request, 1);
 
 
-        user.Password.Value.Should().Be(Password.Create("pooya@admin").Value);
+        user.Password.Should().Be(Password.Create("pooya@admin"));
     }
 
     [Fact]

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Blog.Domain.ValueObject;
 
-public class Password : BaseValueObject<string>
+public class Password : BaseValueObject
 {
     private Password() { }
 
