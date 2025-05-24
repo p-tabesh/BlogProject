@@ -1,6 +1,6 @@
 using Blog.Application.Model.Article;
 using Blog.Infrastructure.Context;
-using Blog.Test.Helper;
+using Blog.Test.IntegrationWithSharedContext;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Net;

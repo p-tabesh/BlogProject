@@ -60,7 +60,7 @@ public class ArticleServiceTest
                 article.PreviewImageLink));
 
         // Act
-        _articleService.LikeArticle(10,1);
+        _articleService.LikeArticle(10, 1);
 
         // Assert
         article.Likes.Count.Should().Be(1);
@@ -119,7 +119,7 @@ public class ArticleServiceTest
                 article.PreviewImageLink));
 
         // Act
-        _articleService.DislikeArticle(10, 1);        
+        _articleService.DislikeArticle(10, 1);
 
         // Assert
         article.Dislikes.Count.Should().Be(1);
@@ -153,5 +153,28 @@ public class ArticleServiceTest
 
         // Assert
         article.Dislikes.Count.Should().Be(0);
+    }
+
+    [Fact]
+    public void EditArticle_ShouldBeEdited()
+    {
+        // Arrange
+        var article = new Domain.Entity.Article("Test header", "Test title", "", new List<string>(), "", DateTime.Now, 1, 1);
+        string header = "new header", title = "new title", text = "new text", imagelink = "new image link";
+        var request = new EditArticleRequest(1, header, title, text, imagelink);
+        _articleRepositoryMock.Setup(x => x.GetById(1)).Returns(article);
+
+
+        // Act
+        _articleService.EditArticle(request,1);
+
+        // Assert
+        article.Should().BeEquivalentTo(new
+        {
+            Header = header,
+            Title = title,
+            Text = text,
+            PreviewImageLink = imagelink
+        });
     }
 }

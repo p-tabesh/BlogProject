@@ -56,7 +56,7 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
         return article.Id;
     }
 
-    public void EditArticle(UpdateArticleRequest request, int requestUserId)
+    public void EditArticle(EditArticleRequest request, int requestUserId)
     {
         var article = _articleRepository.GetById(request.ArticleId);
 
@@ -119,7 +119,8 @@ public class ArticleService : BaseService<ArticleService>, IArticleService
 
     public IEnumerable<ArticleViewModel> GetByTextSearch(string search)
     {
-        var articles = _articleRepository.GetWithSpecification(new ArticleBySearchTextSpecification(search).And(new PublishedArticleSpecification()));
+        var articles = _articleRepository.GetWithSpecification(new ArticleBySearchTextSpecification(search)
+                                                                .And(new PublishedArticleSpecification()));
         var models = Mapper.Map<List<ArticleViewModel>>(articles);
 
         return models;

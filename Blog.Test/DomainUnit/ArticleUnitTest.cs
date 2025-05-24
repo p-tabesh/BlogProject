@@ -1,4 +1,5 @@
 ﻿using Blog.Domain.Entity;
+using Blog.Domain.Specifications;
 
 namespace Blog.Test.Unit;
 
@@ -99,5 +100,33 @@ public class ArticleUnitTest
             Text = newText,
             PreviewImageLink = newPreviewImageLink
         });
+    }
+
+    [Fact]
+    public void PublishedSpecification_ArticleShouldSatisfy()
+    {
+        // Arrange
+        var article = new Domain.Entity.Article("Test header", "Test title", "", new List<string>(), "", DateTime.Now, 1, 1);
+        var specification = new PublishedArticleSpecification();
+
+        // Act
+        var satisfied = specification.IsSatisfiedBy(article);
+
+        // Assert
+        Assert.False(satisfied);
+    }
+
+    [Fact]
+    public void PublishedSpecification_ArticleShouldNotSatisfy()
+    {
+        // Arrange
+        var article = new Domain.Entity.Article("Test header", "Test title", "", new List<string>(), "", DateTime.Now, 1, 1);
+        var specification = new PublishedArticleSpecification();
+        article.Accept();
+        // Act
+        var satisfied = specification.IsSatisfiedBy(article);
+
+        // Assert
+        Assert.True(satisfied);
     }
 }

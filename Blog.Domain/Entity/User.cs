@@ -41,6 +41,8 @@ public class User : RootEntity<int>
 
     public void CreateProfile(string fullName, Gender gender, string birthPlace, string bio, string profileImageLink)
     {
+        if (Profile != null)
+            throw new InvalidOperationException("user already has profile");
         Profile = new Profile(fullName, gender, birthPlace, bio, profileImageLink, Id);
     }
 

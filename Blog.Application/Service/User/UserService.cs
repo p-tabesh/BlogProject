@@ -53,6 +53,10 @@ public class UserService : BaseService<UserService>, IUserService
     public void CreateProfile(CreateProfileRequest request, int userId)
     {
         var user = _userRepository.GetWithProfile(userId);
+
+        if (user.Profile != null)
+            throw new Exception("User already has Profile.");
+
         user.CreateProfile(request.FullName, request.Gender, request.BirthPlace, request.Bio, request.ProfileImageLink);
         _userRepository.Update(user);
         UnitOfWork.Commit();

@@ -1,6 +1,6 @@
 ﻿using Blog.Domain.Entity;
 
-namespace Blog.Test.DomainUnitTest;
+namespace Blog.Test.Unit;
 
 public class CommentUnitTest
 {

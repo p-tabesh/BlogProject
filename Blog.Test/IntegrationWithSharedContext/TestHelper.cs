@@ -1,9 +1,10 @@
 ﻿using Blog.Domain.ValueObject;
 using Blog.Infrastructure.Context;
+using Blog.Test.Helper;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Headers;
 
-namespace Blog.Test.Helper;
+namespace Blog.Test.IntegrationWithSharedContext;
 
 
 public class TestHelper : IDisposable
