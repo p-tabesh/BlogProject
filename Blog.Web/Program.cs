@@ -1,4 +1,3 @@
-using Blog.Application;
 using Blog.Application.Model.Article;
 using Blog.Web.Middleware;
 using Blog.Web.Extention;
@@ -12,8 +11,6 @@ using StackExchange.Redis;
 using Microsoft.EntityFrameworkCore;
 using Blog.Infrastructure.Extention;
 using Blog.Application.Service.Article;
-using Refit;
-using Blog.Web.Refit;
 using Blog.Domain.Event;
 using Blog.Infrastructure.Kafka;
 
@@ -51,7 +48,7 @@ builder.Services.AddServices();
 builder.Services.AddRepositories();
 builder.Services.AddUnitOfWork();
 
-builder.Services.AddScoped<AI>();
+//builder.Services.AddScoped<AI>();
 
 
 // Authentication
@@ -85,22 +82,17 @@ builder.Services.AddSingleton(sp =>
     return ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnectionString"));
 });
 
-// Refit Config
-builder.Services
-    .AddRefitClient<IRefitServiceTest>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri("http://localhost:5000"));
-
 
 // Add hosted services
-//builder.Services.AddHostedService<ConsumeArticleViewService>(sp =>
-//{
-//    var consumer = sp.GetRequiredService<IConsumer<string, string>>();
-//    var connectionMultiplexer = sp.GetRequiredService<ConnectionMultiplexer>();
-//    var topic = "articleView-event";
-//    return new ConsumeArticleViewService(consumer, connectionMultiplexer, topic);
-//});
+builder.Services.AddHostedService<ConsumeArticleViewService>(sp =>
+{
+    var consumer = sp.GetRequiredService<IConsumer<string, string>>();
+    var connectionMultiplexer = sp.GetRequiredService<ConnectionMultiplexer>();
+    var topic = "articleView-event";
+    return new ConsumeArticleViewService(consumer, connectionMultiplexer, topic);
+});
 
-//builder.Services.AddHostedService<ProcessArticleViewService>();
+builder.Services.AddHostedService<ProcessArticleViewService>();
 
 //// Mapper Configuration
 var mapperConfiguration = new MapperConfiguration(cfg =>
