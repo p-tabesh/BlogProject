@@ -8,7 +8,6 @@ public class User : RootEntity<int>
     public Username Username { get; private set; }
     public Password Password { get; private set; }
     public Email Email { get; private set; }
-    public bool IsAdmin { get; private set; }
     public DateTime CreationDate { get; private set; }
     public List<int> FavoriteArticleIds { get; private set; } = new();
     public Profile? Profile { get; private set; }
@@ -21,7 +20,6 @@ public class User : RootEntity<int>
         Username = username;
         Password = password;
         Email = email;
-        IsAdmin = isAdmin;
         CreationDate = DateTime.UtcNow;
         IsActive = true;
     }
